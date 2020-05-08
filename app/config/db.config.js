@@ -1,8 +1,8 @@
 module.exports = {
-    HOST: '193.70.6.160',
-    USER: 'fanix',
-    PASSWORD: 'JurassicX12X3',
-    DB: 'fanix',
+    HOST: '151.80.34.200',
+    USER: 'blobwar',
+    PASSWORD: '><m?}:6)M9fag.c(',
+    DB: 'blobwar',
     dialect: 'mysql',
     pool: {
         max: 5,
