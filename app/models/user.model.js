@@ -1,71 +1,47 @@
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define('user', {
-        name: {
+    const User = sequelize.define('users', {
+        Name: {
             type: Sequelize.STRING,
+            allowNull: false,
         },
-        email: {
+        Email: {
             type: Sequelize.STRING,
+            allowNull: false,
         },
-        ip_address: {
-            type: Sequelize.STRING,
-        },
-        coins: {
+        Coins: {
             type: Sequelize.INTEGER,
+            allowNull: false,
             defaultValue: 50,
         },
-        level: {
+        Level: {
             type: Sequelize.INTEGER,
+            allowNull: false,
             defaultValue: 10,
         },
-        xp: {
+        Xp: {
             type: Sequelize.INTEGER,
+            allowNull: false,
             defaultValue: 0,
         },
-        pwd: {
-            type: Sequelize.BLOB,
-        },
-        color: {
+        Color: {
             type: Sequelize.STRING,
         },
-        hat: {
+        HasColor: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        HasRainbow: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        Role: {
             type: Sequelize.STRING,
         },
-        session_id: {
-            type: Sequelize.STRING,
-        },
-        hascolor: {
+        IsChatBanned: {
             type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        hasrainbow: {
-            type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        oldcolor: {
-            type: Sequelize.STRING,
-        },
-        tierpoints: {
-            type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        tierlevel: {
-            type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        role: {
-            type: Sequelize.STRING,
-            defaultValue: 'Guest',
-        },
-        chat_ban: {
-            type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        noads: {
-            type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        referral_count: {
-            type: Sequelize.INTEGER,
+            allowNull: false,
             defaultValue: 0,
         },
     });
