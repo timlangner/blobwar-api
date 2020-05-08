@@ -5,17 +5,9 @@ const Op = db.Sequelize.Op;
 // Create and Save a new User
 exports.create = (req, res) => {};
 
-User.addScope('exclude', {
-            exclude: ['createdAt', 'updatedAt', 'pwd'],
-        });
-
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-    User.findAll({
-        attributes: {
-            exclude: ['pwd', 'createdAt', 'updatedAt' ],
-        },
-    })
+    User.findAll()
         .then((data) => {
             res.send(data);
         })
@@ -33,10 +25,7 @@ exports.findOne = (req, res) => {
     const id = req.params.id;
 
     User.findOne({
-        where: { id: id },
-        attributes: {
-            exclude: ['pwd', 'createdAt', 'updatedAt'],
-        },
+        where: { id: id }
     })
         .then((data) => {
             res.send(data);
