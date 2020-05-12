@@ -37,11 +37,25 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a User by the id in the request
-exports.update = (req, res) => {};
+// Create a user
+exports.create = (req, res) => {
 
-// Delete a User with the specified id in the request
-exports.delete = (req, res) => {};
+    // Validate request
+    if (!req.body) {
+        res.status(400).send({
+            message: 'Content can not be empty!',
+        });
+        return;
+    }
 
-// Delete all Users from the database.
-exports.deleteAll = (req, res) => {};
+    User.create(req.body)
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({
+                message: 'Some error occurred while creating a user.',
+            });
+        });
+};
