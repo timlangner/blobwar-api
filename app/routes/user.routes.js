@@ -5,23 +5,23 @@ module.exports = (app) => {
 
     var router = require('express').Router();
 
-    // Authorization Middleware init
-    const checkJwt = jwt({
-        secret: jwksRsa.expressJwtSecret({
-            cache: true,
-            rateLimit: true,
-            jwksRequestsPerMinute: 5,
-            jwksUri: `https://dev-vlkok0uj.eu.auth0.com/.well-known/jwks.json`,
-        }),
+    // // Authorization Middleware init
+    // const checkJwt = jwt({
+    //     secret: jwksRsa.expressJwtSecret({
+    //         cache: true,
+    //         rateLimit: true,
+    //         jwksRequestsPerMinute: 5,
+    //         jwksUri: `https://dev-vlkok0uj.eu.auth0.com/.well-known/jwks.json`,
+    //     }),
 
-        // Validate the audience and the issuer.
-        audience: 'https:/blobwar.io/api/v1/',
-        issuer: `https://dev-vlkok0uj.eu.auth0.com/`,
-        algorithms: ['RS256'],
-    });
+    //     // Validate the audience and the issuer.
+    //     audience: 'https:/blobwar.io/api/v1/',
+    //     issuer: `https://dev-vlkok0uj.eu.auth0.com/`,
+    //     algorithms: ['RS256'],
+    // });
 
-    // Check for Authorization
-    router.use(checkJwt);
+    // // Check for Authorization
+    // router.use(checkJwt);
 
     // Retrieve all Users
     router.get('/', users.findAll);
@@ -31,15 +31,6 @@ module.exports = (app) => {
 
     // Create a new User
     router.post('/', users.create);
-
-    // Update a User with id
-    router.put('/:id', users.update);
-
-    // Delete a User with id
-    router.delete('/:id', users.delete);
-
-    // Delete all Users
-    router.delete('/', users.deleteAll);
 
     app.use('/api/v1/users', router);
 };
