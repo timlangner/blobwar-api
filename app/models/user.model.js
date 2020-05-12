@@ -39,6 +39,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             Role: {
                 type: Sequelize.STRING,
+                allowNull: false,
                 defaultValue: 'Player',
             },
             Muted: {
@@ -51,6 +52,8 @@ module.exports = (sequelize, Sequelize) => {
             defaultScope: {
                 attributes: { exclude: ['createdAt', 'updatedAt'] },
             },
+            freezeTableName: true,
+            timestamps: false,
         },
     );
 
