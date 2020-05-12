@@ -1,9 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define(
-        'users',
+        'User',
         {
-            Name: {
+            Id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+            },
+            Username: {
                 type: Sequelize.STRING,
+                allowNull: false,
+            },
+            Discriminator: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            DiscordUserId: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
             },
             Email: {
@@ -15,11 +29,6 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
                 defaultValue: 50,
             },
-            Level: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 10,
-            },
             Xp: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -28,20 +37,11 @@ module.exports = (sequelize, Sequelize) => {
             Color: {
                 type: Sequelize.STRING,
             },
-            HasColor: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0,
-            },
-            HasRainbow: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0,
-            },
             Role: {
                 type: Sequelize.STRING,
+                defaultValue: 'Player',
             },
-            IsChatBanned: {
+            Muted: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
