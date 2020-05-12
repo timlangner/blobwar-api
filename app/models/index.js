@@ -1,10 +1,19 @@
 const dbConfig = require('../config/db.config.js');
-
 const Sequelize = require('sequelize');
+
+//database wide options
+const options = {
+    define: {
+        //prevent sequelize from pluralizing table names
+        freezeTableName: true
+    }
+}
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
     operatorsAliases: false,
+    options,
 
     pool: {
         max: dbConfig.pool.max,
