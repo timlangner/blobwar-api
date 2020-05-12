@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const users = require('../controllers/user.controller.js');
+    const user = require('../controllers/user.controller.js');
     const jwt = require('express-jwt');
     const jwksRsa = require('jwks-rsa');
 
@@ -24,13 +24,13 @@ module.exports = (app) => {
     // router.use(checkJwt);
 
     // Retrieve all Users
-    router.get('/', users.findAll);
+    router.get('/', user.findAll);
 
     // Retrieve a single User with id
-    router.get('/:id', users.findOne);
+    router.get('/:id', user.findOne);
 
     // Create a new User
-    router.post('/', users.create);
+    router.post('/', user.create);
 
     app.use('/api/v1/users', router);
 };
