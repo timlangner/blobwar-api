@@ -1,5 +1,6 @@
 module.exports = (app) => {
     const user = require('../controllers/user.controller.js');
+    const skin = require('../controllers/skin.controller.js');
     const jwt = require('express-jwt');
     const jwksRsa = require('jwks-rsa');
 
@@ -28,6 +29,9 @@ module.exports = (app) => {
 
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
+
+    // Retrieve all skins from a user
+    router.get('/:id/skins', skin.findSkins);
 
     // Create a new User
     router.post('/', user.create);
