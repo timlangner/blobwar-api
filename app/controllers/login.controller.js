@@ -21,8 +21,8 @@ exports.authDiscord = (req, res) => {
                 message: 'Error retrieving Token',
             });
         } else {
-            console.log('body', body);
-            console.log('token', body.access_token);
+
+            body = JSON.parse(body);
             request(
                 {
                     url:
@@ -38,7 +38,7 @@ exports.authDiscord = (req, res) => {
                             message: 'Error retrieving User Object',
                         });
                     } else {
-                        res.send(response);
+                        res.send(JSON.parse(response.body));
                     }
                 },
             );
