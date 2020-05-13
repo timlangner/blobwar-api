@@ -16,6 +16,32 @@ exports.authDiscord = (req, res) => {
             scope: 'identify email',
         },
     }, (err, httpResponse, body) => {
-        res.send(body);
+        if (err) {
+            res.status(500).send({
+                message: 'Error retrieving Token',
+            });
+        } else {
+            console.log('body', body);
+            console.log('token', body.access_token);
+            request(
+                {
+                    url:
+                        'https://discordapp.com/api/users/@me',
+                    headers: {
+                        Authorization: `Bearer ${body.access_token}`,
+                    },
+                    rejectUnauthorized: false,
+                },
+                (err, response) => {
+                    if (err) {
+                        res.status(500).send({
+                            message: 'Error retrieving User Object',
+                        });
+                    } else {
+                        res.send(response);
+                    }
+                },
+            );
+        }
     });
 };
