@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
             },
             Discriminator: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 allowNull: false,
             },
             DiscordUserId: {
