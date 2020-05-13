@@ -19,16 +19,25 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single User with an id
+// Find all skins of a user
 exports.findSkins = (req, res) => {
     const id = req.params.id;
 
-    Skin.hasMany(HasSkin, {
-        foreignKey: 'SkinId',
-    });
-    HasSkin.belongsTo(User, { foreignKey: 'UserId' });
-    HasSkin.belongsTo(Skin, { foreignKey: 'SkinId' });
-    Skin.findAll({ where: { UserId: 4 }, include: [User, HasSkin]})
+    Skin.hasMany(HasSkin);
+    Skin.hasMany(User);
+    HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
+    HasSkin.belongsTo(Skin, { targetKey: 'Id', foreignKey: 'SkinId' });
+    Skin.findAll({
+        attributes: ['Id', 'Name', 'Price'],
+        include: [
+            {
+                model: HasSkin,
+                attributes: [],
+                where: { UserId: id },
+                required: true,
+            },
+        ],
+    })
         .then((data) => {
             res.send(data);
         })
