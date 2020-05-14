@@ -48,3 +48,28 @@ exports.findSkins = (req, res) => {
             });
         });
 };
+
+// Add's a skin to a user
+exports.addSkin = (req, res) => {
+    // Validate request
+    if (!req.body) {
+        res.status(400).send({
+            message: 'Content can not be empty!',
+        });
+        return;
+    }
+
+    HasSkin.create({
+        UserId: parseInt(req.params.id),
+        SkinId: req.body.skinId
+    })
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({
+                message: 'Some error occurred while adding a skin to a user.',
+            });
+        });
+};

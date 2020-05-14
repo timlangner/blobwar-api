@@ -6,5 +6,7 @@ module.exports = (app) => {
     // Retrieve all Users
     router.get('/', skin.findAll);
 
+    router.post('/:id', skin.addSkin)
+
     app.use('/api/v1/skins', router);
 };

@@ -20,7 +20,6 @@ module.exports = (sequelize, Sequelize) => {
             },
             CreationTime: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
             },
         },
         {
