@@ -1,6 +1,6 @@
 const db = require('../models');
 const User = db.user;
-const Op = db.Sequelize.Op;
+const Sequelize = db.Sequelize;
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
@@ -53,6 +53,25 @@ exports.create = (req, res) => {
             console.log(err);
             res.status(500).send({
                 message: 'Some error occurred while creating a user.',
+            });
+        });
+};
+
+// Retrieve the top 100 users with the most xp
+exports.getLeaderBoard = (req, res) => {
+    User.findAll({
+        attributes: ['Id', 'Username', 'Discriminator', 'Xp'],
+        limit: 100,
+        order: [[Sequelize.col('Xp'), 'DESC']],
+    })
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurred while retrieving the user leaderboard.',
             });
         });
 };
