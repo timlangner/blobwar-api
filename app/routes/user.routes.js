@@ -26,6 +26,9 @@ module.exports = (app) => {
 
     // Retrieve all Users
     router.get('/', user.findAll);
+    
+    // Retrieve the top 100 users with the most xp
+    router.get('/leaderboard', user.getLeaderBoard);
 
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
