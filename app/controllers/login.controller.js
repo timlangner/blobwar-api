@@ -1,4 +1,6 @@
 const request = require('request');
+const db = require('../models');
+const User = db.user;
 
 exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
@@ -38,7 +40,34 @@ exports.authDiscord = (req, res) => {
                             message: 'Error retrieving User Object',
                         });
                     } else {
-                        res.send(JSON.parse(response.body));
+                        
+                        const body = JSON.parse(response.body);
+                        // Get User data for DiscordUser
+                        User.findOne({
+                            where: { DiscordUserId: body.id },
+                        }).then((user) => {
+                            if (!user) {
+                                // Create user if there's no user with that DiscordUserId
+                                const createUserBody = {
+                                    Username: body.username,
+                                    Discriminator: body.discriminator,
+                                    DiscordUserId: body.id,
+                                    Email: body.email,
+                                };
+                                User.create(createUserBody)
+                                    .then((createdUser) => {
+                                        res.status(201).send(createdUser);
+                                    })
+                                    .catch((err) => {
+                                        res.status(500).send({
+                                            message:
+                                                'Some error occurred while creating a user.',
+                                        });
+                                    });
+                            } else {
+                                res.send(user);
+                            }
+                        });
                     }
                 },
             );
