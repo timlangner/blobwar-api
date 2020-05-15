@@ -25,62 +25,72 @@ exports.authDiscord = (req, res) => {
             });
         } else {
 
-            body = JSON.parse(body);
-            DiscordTokens.create({
-                access_token: body.access_token,
-                refresh_token: body.refresh_token
-            })
-            .then(() => {
-                request(
-                    {
-                        url: 'https://discordapp.com/api/users/@me',
-                        headers: {
-                            Authorization: `Bearer ${body.access_token}`,
-                        },
-                        rejectUnauthorized: false,
+            const tokenBody = JSON.parse(body);
+            request(
+                {
+                    url: 'https://discordapp.com/api/users/@me',
+                    headers: {
+                        Authorization: `Bearer ${tokenBody.access_token}`,
                     },
-                    (err, response) => {
-                        if (err) {
-                            res.status(500).send({
-                                message: 'Error retrieving User Object',
-                            });
-                        } else {
-                            const body = JSON.parse(response.body);
-                            // Get User data for DiscordUser
-                            User.findOne({
-                                where: { DiscordUserId: body.id },
-                            }).then((user) => {
-                                if (!user) {
-                                    // Create user if there's no user with that DiscordUserId
-                                    const createUserBody = {
-                                        Username: body.username,
-                                        Discriminator: body.discriminator,
-                                        DiscordUserId: body.id,
-                                        Email: body.email,
-                                    };
-                                    User.create(createUserBody)
-                                        .then((createdUser) => {
-                                            res.status(201).send(createdUser);
+                    rejectUnauthorized: false,
+                },
+                (err, response) => {
+                    if (err) {
+                        res.status(500).send({
+                            message: 'Error retrieving User Object',
+                        });
+                    } else {
+                        const discordUserBody = JSON.parse(response.body);
+                        // Get User data for DiscordUser
+                        User.findOne({
+                            where: { DiscordUserId: discordUserBody.id },
+                        }).then((user) => {
+                            if (!user) {
+                                // Create user if there's no user with that DiscordUserId
+                                const createUserBody = {
+                                    Username: discordUserBody.username,
+                                    Discriminator: discordUserBody.discriminator,
+                                    DiscordUserId: discordUserBody.id,
+                                    Email: discordUserBody.email,
+                                };
+                                User.create(createUserBody)
+                                    .then((createdUser) => {
+                                        console.log(createdUser.dataValues.Id);
+                                        DiscordTokens.create({
+                                            UserId: createdUser.dataValues.Id,
+                                            access_token:
+                                                tokenBody.access_token,
+                                            refresh_token:
+                                                tokenBody.refresh_token,
+                                            CreationTime: Date.now(),
                                         })
-                                        .catch((err) => {
-                                            res.status(500).send({
-                                                message:
-                                                    'Some error occurred while creating a user.',
+                                            .then(() => {
+                                                res.status(201).send(
+                                                    createdUser,
+                                                );
+                                            })
+                                            .catch((err) => {
+                                                console.log(err);
+                                                res.status(500).send({
+                                                    message:
+                                                        'Some error occurred while adding discord tokens.',
+                                                });
                                             });
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                        res.status(500).send({
+                                            message:
+                                                'Some error occurred while creating a user.',
                                         });
-                                } else {
-                                    res.send(user);
-                                }
-                            });
-                        }
-                    },
-                );
-            })
-            .catch((err) => {
-                res.status(500).send({
-                    message: 'Some error occurred while adding discord tokens.',
-                });
-            });
+                                    });
+                            } else {
+                                res.send(user);
+                            }
+                        });
+                    }
+                },
+            );
         }
     });
 };
