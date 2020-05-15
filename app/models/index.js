@@ -22,5 +22,6 @@ db.sequelize = sequelize;
 db.user = require('./user.model.js')(sequelize, Sequelize);
 db.skin = require('./skin.model.js')(sequelize, Sequelize);
 db.hasSkin = require('./hasSkin.model.js')(sequelize, Sequelize);
+db.discordTokens = require('./discordTokens.model.js')(sequelize, Sequelize);
 
 module.exports = db;
