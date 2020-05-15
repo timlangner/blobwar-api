@@ -8,6 +8,11 @@ module.exports = (sequelize, Sequelize) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
+            UserId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: { model: 'User', key: 'Id' },
+            },
             access_token: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -15,6 +20,9 @@ module.exports = (sequelize, Sequelize) => {
             refresh_token: {
                 type: Sequelize.STRING,
                 allowNull: false,
+            },
+            CreationTime: {
+                type: Sequelize.INTEGER,
             },
         },
         {
