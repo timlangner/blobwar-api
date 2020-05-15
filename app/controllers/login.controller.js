@@ -1,6 +1,7 @@
 const request = require('request');
 const db = require('../models');
 const User = db.user;
+const DiscordTokens = db.discordTokens;
 
 exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
@@ -25,52 +26,61 @@ exports.authDiscord = (req, res) => {
         } else {
 
             body = JSON.parse(body);
-            request(
-                {
-                    url:
-                        'https://discordapp.com/api/users/@me',
-                    headers: {
-                        Authorization: `Bearer ${body.access_token}`,
+            DiscordTokens.create({
+                access_token: body.access_token,
+                refresh_token: body.refresh_token
+            })
+            .then(() => {
+                request(
+                    {
+                        url: 'https://discordapp.com/api/users/@me',
+                        headers: {
+                            Authorization: `Bearer ${body.access_token}`,
+                        },
+                        rejectUnauthorized: false,
                     },
-                    rejectUnauthorized: false,
-                },
-                (err, response) => {
-                    if (err) {
-                        res.status(500).send({
-                            message: 'Error retrieving User Object',
-                        });
-                    } else {
-                        
-                        const body = JSON.parse(response.body);
-                        // Get User data for DiscordUser
-                        User.findOne({
-                            where: { DiscordUserId: body.id },
-                        }).then((user) => {
-                            if (!user) {
-                                // Create user if there's no user with that DiscordUserId
-                                const createUserBody = {
-                                    Username: body.username,
-                                    Discriminator: body.discriminator,
-                                    DiscordUserId: body.id,
-                                    Email: body.email,
-                                };
-                                User.create(createUserBody)
-                                    .then((createdUser) => {
-                                        res.status(201).send(createdUser);
-                                    })
-                                    .catch((err) => {
-                                        res.status(500).send({
-                                            message:
-                                                'Some error occurred while creating a user.',
+                    (err, response) => {
+                        if (err) {
+                            res.status(500).send({
+                                message: 'Error retrieving User Object',
+                            });
+                        } else {
+                            const body = JSON.parse(response.body);
+                            // Get User data for DiscordUser
+                            User.findOne({
+                                where: { DiscordUserId: body.id },
+                            }).then((user) => {
+                                if (!user) {
+                                    // Create user if there's no user with that DiscordUserId
+                                    const createUserBody = {
+                                        Username: body.username,
+                                        Discriminator: body.discriminator,
+                                        DiscordUserId: body.id,
+                                        Email: body.email,
+                                    };
+                                    User.create(createUserBody)
+                                        .then((createdUser) => {
+                                            res.status(201).send(createdUser);
+                                        })
+                                        .catch((err) => {
+                                            res.status(500).send({
+                                                message:
+                                                    'Some error occurred while creating a user.',
+                                            });
                                         });
-                                    });
-                            } else {
-                                res.send(user);
-                            }
-                        });
-                    }
-                },
-            );
+                                } else {
+                                    res.send(user);
+                                }
+                            });
+                        }
+                    },
+                );
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message: 'Some error occurred while adding discord tokens.',
+                });
+            });
         }
     });
 };
