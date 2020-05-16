@@ -65,8 +65,16 @@ exports.authDiscord = (req, res) => {
                                             CreationTime: Date.now(),
                                         })
                                             .then(() => {
+                                                
+                                                const createdUserObject = [];
+                                                createdUserObject.push(
+                                                    createdUser.dataValues,
+                                                );
+                                                createdUserObject.push({
+                                                    tokens: tokenBody,
+                                                });
                                                 res.status(201).send(
-                                                    createdUser,
+                                                    createdUserObject,
                                                 );
                                             })
                                             .catch((err) => {
@@ -85,30 +93,10 @@ exports.authDiscord = (req, res) => {
                                         });
                                     });
                             } else {
-                                DiscordTokens.hasMany(User);
-                                DiscordTokens.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
-                                DiscordTokens.findOne({
-                                    attributes: [
-                                        'access_token',
-                                        'refresh_token',
-                                        'CreationTime',
-                                    ],
-                                    where: {
-                                        UserId: user.dataValues.Id,
-                                    },
-                                    include: [
-                                        {
-                                            model: User,
-                                            attributes: [],
-                                            where: {
-                                                Id: user.dataValues.Id,
-                                            },
-                                            required: true,
-                                        },
-                                    ],
-                                }).then((userInfo) => {
-                                    res.send(userInfo);
-                                });
+                                const userObject = [];
+                                userObject.push(user.dataValues);
+                                userObject.push({ tokens: tokenBody });
+                                res.send(userObject);
                             }
                         });
                     }
