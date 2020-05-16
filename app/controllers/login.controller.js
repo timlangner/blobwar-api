@@ -49,13 +49,13 @@ exports.authDiscord = (req, res) => {
                                 // Create user if there's no user with that DiscordUserId
                                 const createUserBody = {
                                     Username: discordUserBody.username,
-                                    Discriminator: discordUserBody.discriminator,
+                                    Discriminator:
+                                        discordUserBody.discriminator,
                                     DiscordUserId: discordUserBody.id,
                                     Email: discordUserBody.email,
                                 };
                                 User.create(createUserBody)
                                     .then((createdUser) => {
-                                        console.log(createdUser.dataValues.Id);
                                         DiscordTokens.create({
                                             UserId: createdUser.dataValues.Id,
                                             access_token:
@@ -85,7 +85,30 @@ exports.authDiscord = (req, res) => {
                                         });
                                     });
                             } else {
-                                res.send(user);
+                                DiscordTokens.hasMany(User);
+                                DiscordTokens.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
+                                DiscordTokens.findOne({
+                                    attributes: [
+                                        'access_token',
+                                        'refresh_token',
+                                        'CreationTime',
+                                    ],
+                                    where: {
+                                        UserId: user.dataValues.Id,
+                                    },
+                                    include: [
+                                        {
+                                            model: User,
+                                            attributes: [],
+                                            where: {
+                                                Id: user.dataValues.Id,
+                                            },
+                                            required: true,
+                                        },
+                                    ],
+                                }).then((userInfo) => {
+                                    res.send(userInfo);
+                                });
                             }
                         });
                     }

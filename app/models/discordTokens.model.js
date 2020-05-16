@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
                 references: { model: 'User', key: 'Id' },
             },
             access_token: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 allowNull: false,
             },
             refresh_token: {
@@ -22,7 +22,7 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
             },
             CreationTime: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
             },
         },
         {
