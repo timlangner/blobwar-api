@@ -2,11 +2,46 @@ const db = require('../models');
 const Skin = db.skin;
 const HasSkin = db.hasSkin;
 const User = db.user;
-const Op = db.Sequelize.Op;
 
-// Retrieve all Skins from the database.
-exports.findAll = (req, res) => {
-    Skin.findAll()
+// Retrieve all premium Skins from the database.
+exports.findPremium = (req, res) => {
+    Skin.findAll({
+        where: db.sequelize.where(db.sequelize.literal('Price'), '>', 0),
+    })
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurred while retrieving all skins.',
+            });
+        });
+};
+
+// Retrieve all free Skins from the database.
+exports.findFree = (req, res) => {
+    Skin.findAll({
+        where: { Price: 0 }
+    })
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurred while retrieving all skins.',
+            });
+        });
+};
+
+// Retrieve all free Skins from the database.
+exports.findLevel = (req, res) => {
+    Skin.findAll({
+        where: db.sequelize.where(db.sequelize.literal('Xp'), '>', 0),
+    })
         .then((data) => {
             res.send(data);
         })
@@ -20,7 +55,7 @@ exports.findAll = (req, res) => {
 };
 
 // Find all skins of a user
-exports.findSkins = (req, res) => {
+exports.findOwned = (req, res) => {
     const id = req.params.id;
 
     Skin.hasMany(HasSkin);
@@ -33,7 +68,7 @@ exports.findSkins = (req, res) => {
             {
                 model: HasSkin,
                 attributes: [],
-                where: { UserId: id },
+                where: { UserId: req.body.UserId },
                 required: true,
             },
         ],
