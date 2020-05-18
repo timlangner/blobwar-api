@@ -4,7 +4,7 @@ module.exports = (app) => {
     var router = require('express').Router();
 
     // Retrieve all Users
-    router.get('/', token.findUser);
+    router.post('/', token.findUser);
 
     app.use('/api/v1/token', router);
 };
