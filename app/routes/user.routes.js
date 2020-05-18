@@ -1,6 +1,5 @@
 module.exports = (app) => {
     const user = require('../controllers/user.controller.js');
-    const skin = require('../controllers/shop.controller.js');
     const jwt = require('express-jwt');
     const jwksRsa = require('jwks-rsa');
 
@@ -27,14 +26,17 @@ module.exports = (app) => {
     // Retrieve all Users
     router.get('/', user.findAll);
     
+    // Create a new User
+    router.post('/', user.create);
+
+    // Create a new User
+    router.get('/session', user.getUserBySessionId);
+    
     // Retrieve the top 100 users with the most xp
     router.get('/leaderboard', user.getLeaderBoard);
 
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
-
-    // Create a new User
-    router.post('/', user.create);
 
     app.use('/api/v1/users', router);
 };
