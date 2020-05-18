@@ -4,8 +4,9 @@ const path = require('path');
 // Create a JSON file
 exports.createJSON = (req, res) => {
     const body = JSON.stringify(req.body);
-    fs.writeFileSync('serverStats.json', body, 'utf8', () => {
-        console.log('File created!');
+    fs.writeFileSync('serverStats.json', body);
+    res.status(200).send({
+        message: 'File written',
     });
 };
 
