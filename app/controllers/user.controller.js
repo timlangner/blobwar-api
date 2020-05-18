@@ -57,6 +57,25 @@ exports.create = (req, res) => {
         });
 };
 
+// Checks if an available sessionId exists & return user
+exports.getUserBySessionId = (req, res) => {
+    const sessionId = req.body.SessionId;
+
+    User.findOne({
+        where: { SessionId: sessionId },
+    })
+        .then((user) => {
+            if (user) {
+                res.send(user);
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: 'Error retrieving User by SessionId',
+            });
+        });
+};
+
 // Retrieve the top 100 users with the most xp
 exports.getLeaderBoard = (req, res) => {
     User.findAll({
