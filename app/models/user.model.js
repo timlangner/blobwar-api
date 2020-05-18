@@ -24,6 +24,9 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
+            SessionId: {
+                type: Sequelize.STRING,
+            },
             Coins: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
