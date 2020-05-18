@@ -3,6 +3,18 @@ const db = require('../models');
 const User = db.user;
 const DiscordTokens = db.discordTokens;
 
+// SessionId Generator
+function generateSessionId(length) {
+  let result = "";
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let charsLen = chars.length;
+
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * charsLen))
+  }
+  return result;
+}
+
 exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
     const CLIENT_ID = '649345140577533952';
@@ -53,37 +65,13 @@ exports.authDiscord = (req, res) => {
                                         discordUserBody.discriminator,
                                     DiscordUserId: discordUserBody.id,
                                     Email: discordUserBody.email,
+                                    SessionId: generateSessionId(40),
                                 };
                                 User.create(createUserBody)
                                     .then((createdUser) => {
-                                        DiscordTokens.create({
-                                            UserId: createdUser.dataValues.Id,
-                                            access_token:
-                                                tokenBody.access_token,
-                                            refresh_token:
-                                                tokenBody.refresh_token,
-                                            CreationTime: Date.now(),
-                                        })
-                                            .then(() => {
-                                                
-                                                const createdUserObject = [];
-                                                createdUserObject.push(
-                                                    createdUser.dataValues,
-                                                );
-                                                createdUserObject.push({
-                                                    tokens: tokenBody,
-                                                });
-                                                res.status(201).send(
-                                                    createdUserObject,
-                                                );
-                                            })
-                                            .catch((err) => {
-                                                console.log(err);
-                                                res.status(500).send({
-                                                    message:
-                                                        'Some error occurred while adding discord tokens.',
-                                                });
-                                            });
+                                        res.status(201).send(
+                                            createdUser,
+                                        );
                                     })
                                     .catch((err) => {
                                         console.log(err);
@@ -93,10 +81,7 @@ exports.authDiscord = (req, res) => {
                                         });
                                     });
                             } else {
-                                const userObject = [];
-                                userObject.push(user.dataValues);
-                                userObject.push({ tokens: tokenBody });
-                                res.send(userObject);
+                                res.send(user);
                             }
                         });
                     }
