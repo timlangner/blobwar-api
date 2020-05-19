@@ -25,13 +25,13 @@ module.exports = (app) => {
 
     // Retrieve all Users
     router.get('/', user.findAll);
-    
+
     // Create a new User
     router.post('/', user.create);
 
     // Create a new User
-    router.get('/session', user.getUserBySessionId);
-    
+    router.post('/session', user.getUserBySessionId);
+
     // Retrieve the top 100 users with the most xp
     router.get('/leaderboard', user.getLeaderBoard);
 
