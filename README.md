@@ -139,7 +139,7 @@ Returns all level skins.
 
 Returns all skins a user owns.
 
-**Body:** 
+**Example-Response:** 
 ```javascript
 [
     {
