@@ -65,6 +65,7 @@ Request to get a specific user by his userId from the database.
     "Role": "Player",
     "Muted": 0
 }
+```
 
 ## Login
 
