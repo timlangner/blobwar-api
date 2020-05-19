@@ -78,7 +78,7 @@ exports.findOwned = (req, res) => {
             {
                 model: HasSkin,
                 attributes: [],
-                where: { UserId: req.body.UserId },
+                where: { UserId: req.params.id },
                 required: true,
             },
         ],
