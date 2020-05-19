@@ -6,7 +6,7 @@ This Backend-Api is used by the browser-game [BlobWar.io](https://blobwar.io).
 * The API manages the user accounts, the discord authorization, the shop, purchases, server stats and more.
 
 ## Database
-* All user accounts, purchases and histories and saved in a database.
+* All user accounts, purchases and histories are saved in a database.
 * LIVE-Database: **151.80.34.200**, DB: **blobwar**
 
 You'll need user credentials to connect to the database.
