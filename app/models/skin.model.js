@@ -22,6 +22,11 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
                 defaultValue: 0,
             },
+            Private: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
         },
         {
             defaultScope: {
