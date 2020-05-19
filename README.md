@@ -1,7 +1,7 @@
 # BlobWar API
 This Backend-Api is used by the browser-game [BlobWar.io](https://blobwar.io).
 
-## Grundlegendes
+## Basics
 * This project contains the API with REST-Endpoints to manage the game.
 * The API manages the user accounts, the discord authorization, the shop, purchases, server stats and more.
 
@@ -34,8 +34,6 @@ Most of the endpoints are secured with an API-Token
 * 204: Success. The body is empty.
 * 400: The request contained invalid parameters.
 * 401: The user is not authorized to control this api.
-* 404: Der Fahrzeugtyp oder das Gerät existiert nicht in der API.
-* 406: Die Warteschlange an Befehlen ist bereits zu groß oder das Gerät ist in der API nicht zur Ansteuerung freigegeben.
 * 409: There has been a conflict with the database.
 * 500: Internal-Server-Error.
 * 504: The server sent no response back.
@@ -55,18 +53,18 @@ Request to get a specific user by his userId from the database.
 **Example-Response:** 
 ```javascript
 {
-        "Id": 58,
-        "Username": "Pake",
-        "Discriminator": "0001",
-        "DiscordUserId": "185053226641522690",
-        "Email": "itzpakemobile@gmail.com",
-        "SessionId": "BOGTO8fH8o8YuWxDv2Kmx1hhmhJ3bUfIK32ybbG3",
-        "Coins": 50,
-        "Xp": 0,
-        "Color": null,
-        "Role": "Player",
-        "Muted": 0
-    }
+    "Id": 58,
+    "Username": "Pake",
+    "Discriminator": "0001",
+    "DiscordUserId": "185053226641522690",
+    "Email": "itzpakemobile@gmail.com",
+    "SessionId": "BOGTO8fH8o8YuWxDv2Kmx1hhmhJ3bUfIK32ybbG3",
+    "Coins": 50,
+    "Xp": 0,
+    "Color": null,
+    "Role": "Player",
+    "Muted": 0
+}
 
 ## Login
 
