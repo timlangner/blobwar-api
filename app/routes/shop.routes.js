@@ -13,7 +13,7 @@ module.exports = (app) => {
     router.get('/skins/level', shop.findLevel);
 
     // Retrieve all skins from a user
-    router.get('/skins/owned', shop.findOwned);
+    router.get('/skins/owned/:id', shop.findOwned);
 
     app.use('/api/v1/shop', router);
 };
