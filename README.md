@@ -69,7 +69,9 @@ Request to get a specific user by his userId from the database.
 
 ## Login
 
-*  **(GET) /users/session**
+*  **(POST) /users/session**
+
+Returns the usero object of the user with the given sessionId
 
 **Body:** 
 ```javascript
@@ -133,13 +135,22 @@ Returns all free skins.
 
 Returns all level skins.
 
-**(GET) /shop/skins/owned**
+**(GET) /shop/skins/owned/{UserId}**
 
 Returns all skins a user owns.
 
 **Body:** 
 ```javascript
-{
-	"UserId": 4
-}
+[
+    {
+        "Id": 1,
+        "Name": "Bat",
+        "Price": 100
+    },
+    {
+        "Id": 2,
+        "Name": "Sabretooth",
+        "Price": 0
+    }
+]
 ```
