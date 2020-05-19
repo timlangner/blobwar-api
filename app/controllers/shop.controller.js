@@ -2,11 +2,18 @@ const db = require('../models');
 const Skin = db.skin;
 const HasSkin = db.hasSkin;
 const User = db.user;
+const Op = db.Sequelize.Op;
 
 // Retrieve all premium Skins from the database.
 exports.findPremium = (req, res) => {
     Skin.findAll({
-        where: db.sequelize.where(db.sequelize.literal('Price'), '>', 0),
+        where: {
+            Price: {
+                [Op.gt]: 0,
+            },
+            Private: 0,
+            Xp: 0
+        }
     })
         .then((data) => {
             res.send(data);
@@ -23,7 +30,7 @@ exports.findPremium = (req, res) => {
 // Retrieve all free Skins from the database.
 exports.findFree = (req, res) => {
     Skin.findAll({
-        where: { Price: 0 }
+        where: { Price: 0, Xp: 0, Private: 0 }
     })
         .then((data) => {
             res.send(data);
@@ -37,10 +44,15 @@ exports.findFree = (req, res) => {
         });
 };
 
-// Retrieve all free Skins from the database.
+// Retrieve all level Skins from the database.
 exports.findLevel = (req, res) => {
     Skin.findAll({
-        where: db.sequelize.where(db.sequelize.literal('Xp'), '>', 0),
+        where: {
+            Xp: {
+                [Op.gt]: 0,
+            },
+            Private: 0
+        },
     })
         .then((data) => {
             res.send(data);
@@ -56,8 +68,6 @@ exports.findLevel = (req, res) => {
 
 // Find all skins of a user
 exports.findOwned = (req, res) => {
-    const id = req.params.id;
-
     Skin.hasMany(HasSkin);
     Skin.hasMany(User);
     HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
@@ -79,7 +89,9 @@ exports.findOwned = (req, res) => {
         .catch((err) => {
             console.log(err);
             res.status(500).send({
-                message: 'Error retrieving all Skins from User with id=' + id,
+                message:
+                    'Error retrieving all Skins from User with id=' +
+                    req.body.UserId,
             });
         });
 };
