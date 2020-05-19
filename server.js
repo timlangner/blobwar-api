@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // listen for routes
 require('./app/routes/user.routes')(app);
 require('./app/routes/login.routes')(app);
-require('./app/routes/token.routes')(app);
 require('./app/routes/server.routes')(app);
 require('./app/routes/shop.routes')(app);
 
