@@ -5,21 +5,21 @@ const DiscordTokens = db.discordTokens;
 
 // SessionId Generator
 function generateSessionId(length) {
-  let result = "";
-  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let charsLen = chars.length;
+    let result = "";
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let charsLen = chars.length;
 
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * charsLen))
-  }
-  return result;
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * charsLen))
+    }
+    return result;
 }
 
 exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
     const CLIENT_ID = '649345140577533952';
     const CLIENT_SECRET = 't_u5HfiZd66Ckz32eDXLyL9s7xoeFMxS';
-    const REDIRECT_URI = 'http://127.0.0.1:8080/auth/discord';
+    const REDIRECT_URI = 'http://151.80.34.200/auth/discord';
 
     request.post('https://discordapp.com/api/oauth2/token', {
         form: {
