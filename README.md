@@ -154,3 +154,9 @@ Returns all skins a user owns.
     }
 ]
 ```
+
+## Bad Words
+
+**(GET) /badwords**
+
+Returns all bad words.
