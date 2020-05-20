@@ -6,7 +6,7 @@ This Backend-Api is used by the browser-game [BlobWar.io](https://blobwar.io).
 * The API manages the user accounts, the discord authorization, the shop, purchases, server stats and more.
 
 ## Database
-* All user accounts, purchases and histories and saved in a database.
+* All user accounts, purchases and histories are saved in a database.
 * LIVE-Database: **151.80.34.200**, DB: **blobwar**
 
 You'll need user credentials to connect to the database.
@@ -65,10 +65,13 @@ Request to get a specific user by his userId from the database.
     "Role": "Player",
     "Muted": 0
 }
+```
 
 ## Login
 
-*  **(GET) /users/session**
+*  **(POST) /users/session**
+
+Returns the usero object of the user with the given sessionId
 
 **Body:** 
 ```javascript
@@ -132,13 +135,22 @@ Returns all free skins.
 
 Returns all level skins.
 
-**(GET) /shop/skins/owned**
+**(GET) /shop/skins/owned/{UserId}**
 
 Returns all skins a user owns.
 
-**Body:** 
+**Example-Response:** 
 ```javascript
-{
-	"UserId": 4
-}
+[
+    {
+        "Id": 1,
+        "Name": "Bat",
+        "Price": 100
+    },
+    {
+        "Id": 2,
+        "Name": "Sabretooth",
+        "Price": 0
+    }
+]
 ```
