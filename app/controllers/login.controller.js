@@ -19,7 +19,7 @@ exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
     const CLIENT_ID = '649345140577533952';
     const CLIENT_SECRET = 't_u5HfiZd66Ckz32eDXLyL9s7xoeFMxS';
-    const REDIRECT_URI = 'http://151.80.34.200/auth/discord';
+    const REDIRECT_URI = `http://${process.env.BASE_IP}/auth/discord`;
 
     request.post('https://discordapp.com/api/oauth2/token', {
         form: {
