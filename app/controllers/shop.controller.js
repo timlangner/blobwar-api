@@ -6,23 +6,49 @@ const Op = db.Sequelize.Op;
 
 // Retrieve all premium Skins from the database.
 exports.findPremium = (req, res) => {
+
+    Skin.hasMany(HasSkin);
+    Skin.hasMany(User);
+    HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
+    HasSkin.belongsTo(Skin, { targetKey: 'Id', foreignKey: 'SkinId' });
     Skin.findAll({
-        where: {
-            Price: {
-                [Op.gt]: 0,
+        attributes: ['Id'],
+        include: [
+            {
+                model: HasSkin,
+                attributes: [],
+                where: { UserId: req.body.UserId },
+                required: true,
             },
-            Private: 0,
-            Xp: 0
-        }
+        ],
     })
-        .then((data) => {
-            res.send(data);
+        .then((ownedUserSkins) => {
+            console.log('ownedUserSkins');
+            console.log(ownedUserSkins[0].dataValues.Id);    
+            
+            Skin.findAll({
+                attributes: ['Id', 'Price', 'Name', 'Xp'],
+                where: {
+                    Price: {
+                        [Op.gt]: 0,
+                    },
+                    Private: 0,
+                    Xp: 0,
+                    [Op.not]: [{ Id: [ownedUserSkins[0].dataValues.Id] }],
+                },
+            })
+                .then((premiumSkins => {
+            console.log(premiumSkins); 
+                    
+                    res.send(premiumSkins);
+                }));
         })
         .catch((err) => {
+            console.log(err);
             res.status(500).send({
                 message:
-                    err.message ||
-                    'Some error occurred while retrieving all skins.',
+                    'Error retrieving all premium skins for User with the Id ' +
+                    req.body.UserId,
             });
         });
 };
