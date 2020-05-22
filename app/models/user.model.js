@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
             },
             DiscordUserId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
                 allowNull: false,
             },
             Email: {
