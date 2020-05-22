@@ -4,13 +4,13 @@ module.exports = (app) => {
     var router = require('express').Router();
 
     // Retrieve all premium skins
-    router.get('/skins/premium', shop.findPremium);
+    router.get('/skins/premium/:id', shop.findPremium);
 
     // Retrieve all free skins
-    router.get('/skins/free', shop.findFree);
+    router.get('/skins/free/:id', shop.findFree);
 
     // Retrieve all level skins
-    router.get('/skins/level', shop.findLevel);
+    router.get('/skins/level/:id', shop.findLevel);
 
     // Retrieve all skins from a user
     router.get('/skins/owned/:id', shop.findOwned);
