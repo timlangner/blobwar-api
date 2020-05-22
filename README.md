@@ -123,15 +123,15 @@ Returns the top 100 players with the most experience.
 
 ## Shop
 
-**(GET) /shop/skins/premium**
+**(GET) /shop/skins/premium/{UserId}**
 
 Returns all premium skins.
 
-**(GET) /shop/skins/free**
+**(GET) /shop/skins/free/{UserId}**
 
 Returns all free skins.
 
-**(GET) /shop/skins/level**
+**(GET) /shop/skins/level/{UserId}**
 
 Returns all level skins.
 
