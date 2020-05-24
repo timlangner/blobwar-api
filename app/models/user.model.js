@@ -43,7 +43,7 @@ module.exports = (sequelize, Sequelize) => {
             Role: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                defaultValue: 'Player',
+                defaultValue: 'Guest',
             },
             Muted: {
                 type: Sequelize.INTEGER,
