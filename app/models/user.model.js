@@ -12,10 +12,6 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            Discriminator: {
-                type: Sequelize.STRING,
-                allowNull: false,
-            },
             DiscordUserId: {
                 type: Sequelize.BIGINT,
                 allowNull: false,
@@ -25,6 +21,9 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
             },
             SessionId: {
+                type: Sequelize.STRING,
+            },
+            IpAddress: {
                 type: Sequelize.STRING,
             },
             Coins: {

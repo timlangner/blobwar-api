@@ -1,7 +1,6 @@
 const request = require('request');
 const db = require('../models');
 const User = db.user;
-const DiscordTokens = db.discordTokens;
 
 // SessionId Generator
 function generateSessionId(length) {
@@ -53,6 +52,12 @@ exports.authDiscord = (req, res) => {
                         });
                     } else {
                         const discordUserBody = JSON.parse(response.body);
+                        // Override IpAddress
+                        User.update({
+                            IpAddress: req.ipInfo.ip,
+                            SessionId: generateSessionId(40),
+                        });
+
                         // Get User data for DiscordUser
                         User.findOne({
                             where: { DiscordUserId: discordUserBody.id },
@@ -61,11 +66,10 @@ exports.authDiscord = (req, res) => {
                                 // Create user if there's no user with that DiscordUserId
                                 const createUserBody = {
                                     Username: discordUserBody.username,
-                                    Discriminator:
-                                        discordUserBody.discriminator,
                                     DiscordUserId: discordUserBody.id,
                                     Email: discordUserBody.email,
                                     SessionId: generateSessionId(40),
+                                    IpAddress: req.ipInfo.ip,
                                 };
                                 User.create(createUserBody)
                                     .then((createdUser) => {
