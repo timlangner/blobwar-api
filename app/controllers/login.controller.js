@@ -91,8 +91,8 @@ exports.authDiscord = (req, res) => {
                                                 discordUserBody.id,
                                         },
                                     },
-                                ).then((updatedUser) => {
-                                    res.send(updatedUser);
+                                ).then(() => {
+                                    res.send(user);
                                 });
                             }
                         });
