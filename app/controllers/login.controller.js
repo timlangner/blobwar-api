@@ -18,7 +18,7 @@ exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
     const CLIENT_ID = '649345140577533952';
     const CLIENT_SECRET = 't_u5HfiZd66Ckz32eDXLyL9s7xoeFMxS';
-    const REDIRECT_URI = `http://127.0.0.1:8080/auth/discord`;
+    const REDIRECT_URI = `https://blobwar.io/auth/discord`;
 
     request.post('https://discordapp.com/api/oauth2/token', {
         form: {
@@ -56,9 +56,11 @@ exports.authDiscord = (req, res) => {
                         User.update({
                             IpAddress: req.ipInfo.ip,
                             SessionId: generateSessionId(40),
-                        },{ where: {
-                            DiscordUserId: discordUserBody.id
-                        }});
+                        }, {
+                            where: {
+                                DiscordUserId: discordUserBody.id
+                            }
+                        });
 
                         // Get User data for DiscordUser
                         User.findOne({
@@ -77,7 +79,7 @@ exports.authDiscord = (req, res) => {
                                 User.create(createUserBody)
                                     .then((createdUser) => {
                                         res.status(201).send(
-                                            createdUser.SessionId,
+                                            createdUser,
                                         );
                                     })
                                     .catch((err) => {
@@ -88,7 +90,7 @@ exports.authDiscord = (req, res) => {
                                         });
                                     });
                             } else {
-                                res.send(user.SessionId);
+                                res.send(user);
                             }
                         });
                     }
