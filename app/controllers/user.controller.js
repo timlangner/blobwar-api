@@ -2,6 +2,26 @@ const db = require('../models');
 const User = db.user;
 const Sequelize = db.Sequelize;
 
+// Logout
+exports.logout = (req, res) => {
+    const SessionId = req.params.SessionId;
+
+    User.update(
+        { SessionId: null, IpAddress: null },
+        { where: { SessionId: SessionId, IpAddress: req.ipInfo.ip } }
+    )
+        .then(() => {
+            res.send("logout")
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurd while trying to logout.',
+            });
+        });
+};
+
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
     User.findAll()
