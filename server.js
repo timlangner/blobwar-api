@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./app/models');
 const https = require("https");
+const fs = require("fs");
 let privateKey = fs.readFileSync('ssl/privkey.pem', 'utf8');
 let certificate = fs.readFileSync('ssl/fullchain.pem', 'utf8');
 let credentials = { key: privateKey, cert: certificate };
