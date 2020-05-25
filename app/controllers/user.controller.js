@@ -60,9 +60,10 @@ exports.create = (req, res) => {
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
     const sessionId = req.body.SessionId;
+    const ipAddress = req.body.IpAddress;
 
     User.findOne({
-        where: { SessionId: sessionId },
+        where: { SessionId: sessionId, IpAddress: ipAddress },
     })
         .then((user) => {
             if (user) {
@@ -79,7 +80,7 @@ exports.getUserBySessionId = (req, res) => {
 // Retrieve the top 100 users with the most xp
 exports.getLeaderBoard = (req, res) => {
     User.findAll({
-        attributes: ['Id', 'Username', 'Discriminator', 'Xp'],
+        attributes: ['Id', 'Username', 'Xp'],
         limit: 100,
         order: [[Sequelize.col('Xp'), 'DESC']],
     })
