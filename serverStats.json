@@ -1,1 +1,1 @@
-{"Ultrasplit":{"1":{"server":{"name":"Ultrasplit_1","port":"5001"},"gamemode":"Free For All","chat":true,"border":{"width":14142,"height":14142},"players":{"limit":30,"current":1,"alive":1,"spectators":0},"time":{"update":"0.238","uptime":6,"start":1590150852557},"shutdown":false}}}
+{"Ultrasplit":{"1":{"server":{"name":"Ultrasplit_1","port":"5001"},"gamemode":"Free For All","chat":true,"border":{"width":14142,"height":14142},"players":{"limit":30,"current":0,"alive":0,"spectators":0},"time":{"update":"0.022","uptime":33,"start":1590351946367},"shutdown":false}}}

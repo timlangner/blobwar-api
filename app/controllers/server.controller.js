@@ -33,6 +33,10 @@ exports.createJSON = (req, res) => {
             saveData[gamemode] = { [number]: req.body }
             fs.writeFileSync('serverStats.json', JSON.stringify(saveData));
         }
+
+        res.status(200).send({
+            message: 'Success',
+        });
     })
 };
 
