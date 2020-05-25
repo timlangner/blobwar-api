@@ -52,49 +52,50 @@ exports.authDiscord = (req, res) => {
                         });
                     } else {
                         const discordUserBody = JSON.parse(response.body);
-                        // Override IpAddress
-                        User.update(
-                            {
-                                IpAddress: req.clientIp,
-                                SessionId: generateSessionId(40),
-                            },
-                            {
-                                where: {
+                        // Get User data for DiscordUser
+                        User.findOne({
+                            where: { DiscordUserId: discordUserBody.id },
+                        }).then((user) => {
+                            if (!user) {
+                                // Create user if there's no user with that DiscordUserId
+                                const createUserBody = {
+                                    Username: discordUserBody.username,
                                     DiscordUserId: discordUserBody.id,
-                                },
-                            },
-                        ).then(() => {
-                            // Get User data for DiscordUser
-                            User.findOne({
-                                where: { DiscordUserId: discordUserBody.id },
-                            }).then((user) => {
-                                if (!user) {
-                                    // Create user if there's no user with that DiscordUserId
-                                    const createUserBody = {
-                                        Username: discordUserBody.username,
-                                        DiscordUserId: discordUserBody.id,
-                                        Email: discordUserBody.email,
-                                        SessionId: generateSessionId(40),
-                                        IpAddress: req.clientIp,
-                                    };
-                                    User.create(createUserBody)
-                                        .then((createdUser) => {
-                                            res.status(201).send(
-                                                createdUser,
-                                            );
-                                        })
-                                        .catch((err) => {
-                                            console.log(err);
-                                            res.status(500).send({
-                                                message:
-                                                    'Some error occurred while creating a user.',
-                                            });
+                                    Email: discordUserBody.email,
+                                    SessionId: generateSessionId(40),
+                                    IpAddress: req.clientIp,
+                                };
+                                User.create(createUserBody)
+                                    .then((createdUser) => {
+                                        res.status(201).send(
+                                            createdUser,
+                                        );
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                        res.status(500).send({
+                                            message:
+                                                'Some error occurred while creating a user.',
                                         });
-                                } else {
-                                    res.send(user);
-                                }
-                            });
-                        })
+                                    });
+                            } else {
+                                    // Override IpAddress & SessionId
+                                    User.update(
+                                        {
+                                            IpAddress: req.clientIp,
+                                            SessionId: generateSessionId(40),
+                                        },
+                                        {
+                                            where: {
+                                                DiscordUserId:
+                                                    discordUserBody.id,
+                                            },
+                                        },
+                                    ).then((updatedUser) => {
+                                        res.send(updatedUser);
+                                    });
+                                   }
+                        });
                     }
                 },
             );
