@@ -8,16 +8,15 @@ exports.logout = (req, res) => {
 
     User.update(
         { SessionId: null, IpAddress: null },
-        { where: { SessionId: sessionId, IpAddress: req.headers['x-forwarded-for'] } }
+        { where: { SessionId: sessionId, IpAddress: req.clientIp } },
     )
         .then(() => {
-            res.send("logout")
+            res.send('logout');
         })
         .catch((err) => {
             res.status(500).send({
                 message:
-                    err.message ||
-                    'Some error occurd while trying to logout.',
+                    err.message || 'Some error occurd while trying to logout.',
             });
         });
 };
