@@ -79,7 +79,6 @@ exports.create = (req, res) => {
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
-    console.log(req.body)
     const sessionId = req.body.SessionId;
 
     User.findOne({
