@@ -8,20 +8,16 @@ exports.logout = (req, res) => {
 
     User.update(
         { SessionId: null, IpAddress: null },
-        {
-            where: {
-                SessionId: SessionId,
-                IpAddress: (req.headers['x-forwarded-for'] || '').split(',')[0],
-            },
-        },
+        { where: { SessionId: sessionId, IpAddress: req.headers['x-forwarded-for'] } }
     )
         .then(() => {
-            res.send('logout');
+            res.send("logout")
         })
         .catch((err) => {
             res.status(500).send({
                 message:
-                    err.message || 'Some error occurd while trying to logout.',
+                    err.message ||
+                    'Some error occurd while trying to logout.',
             });
         });
 };
@@ -83,11 +79,11 @@ exports.create = (req, res) => {
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
-    const sessionId = req.params.SessionId;
+    console.log(req.body)
+    const sessionId = req.body.SessionId;
 
     User.findOne({
-        where: { SessionId: sessionId, IpAddress: (req.headers['x-forwarded-for'] || ''
-                                    ).split(',')[0] },
+        where: { SessionId: sessionId, IpAddress: req.ipInfo.ip },
     })
         .then((user) => {
             if (user) {
