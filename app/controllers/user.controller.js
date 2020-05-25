@@ -60,10 +60,9 @@ exports.create = (req, res) => {
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
     const sessionId = req.body.SessionId;
-    const ipAddress = req.body.IpAddress;
 
     User.findOne({
-        where: { SessionId: sessionId, IpAddress: ipAddress },
+        where: { SessionId: sessionId, IpAddress: req.ipInfo.ip },
     })
         .then((user) => {
             if (user) {
