@@ -56,6 +56,10 @@ exports.authDiscord = (req, res) => {
                         User.update({
                             IpAddress: req.ipInfo.ip,
                             SessionId: generateSessionId(40),
+                        }, {
+                            where: {
+                                DiscordUserId = discordUserBody.id
+                            }
                         });
 
                         // Get User data for DiscordUser
