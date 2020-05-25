@@ -55,7 +55,7 @@ exports.authDiscord = (req, res) => {
                         // Override IpAddress
                         User.update(
                             {
-                                IpAddress: req.headers['x-forwarded-for'],
+                                IpAddress: (req.headers['x-forwarded-for'] || '').split(',')[0],
                                 SessionId: generateSessionId(40),
                             },
                             {
@@ -76,8 +76,9 @@ exports.authDiscord = (req, res) => {
                                     DiscordUserId: discordUserBody.id,
                                     Email: discordUserBody.email,
                                     SessionId: generateSessionId(40),
-                                    IpAddress:
-                                        req.headers['x-forwarded-for'],
+                                    IpAddress: (
+                                        req.headers['x-forwarded-for'] || ''
+                                    ).split(',')[0],
                                 };
                                 User.create(createUserBody)
                                     .then((createdUser) => {
