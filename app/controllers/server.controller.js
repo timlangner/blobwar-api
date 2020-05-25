@@ -32,11 +32,10 @@ exports.createJSON = (req, res) => {
             const number = req.body.server.name.replace(/[A-z]/g, '').replace(/[_]/g, '')
             saveData[gamemode] = { [number]: req.body }
             fs.writeFileSync('serverStats.json', JSON.stringify(saveData));
+            res.status(200).send({
+                message: 'Success',
+            });
         }
-
-        res.status(200).send({
-            message: 'Success',
-        });
     })
 };
 
