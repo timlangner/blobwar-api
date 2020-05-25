@@ -74,7 +74,7 @@ exports.authDiscord = (req, res) => {
                                 User.create(createUserBody)
                                     .then((createdUser) => {
                                         res.status(201).send(
-                                            createdUser,
+                                            createdUser.SessionId,
                                         );
                                     })
                                     .catch((err) => {
@@ -85,7 +85,7 @@ exports.authDiscord = (req, res) => {
                                         });
                                     });
                             } else {
-                                res.send(user);
+                                res.send(user.SessionId);
                             }
                         });
                     }
