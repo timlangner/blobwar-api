@@ -56,7 +56,9 @@ exports.authDiscord = (req, res) => {
                         User.update({
                             IpAddress: req.ipInfo.ip,
                             SessionId: generateSessionId(40),
-                        });
+                        },{ where: {
+                            DiscordUserId: discordUserBody.id
+                        }});
 
                         // Get User data for DiscordUser
                         User.findOne({
@@ -69,7 +71,8 @@ exports.authDiscord = (req, res) => {
                                     DiscordUserId: discordUserBody.id,
                                     Email: discordUserBody.email,
                                     SessionId: generateSessionId(40),
-                                    IpAddress: req.ipInfo.ip,
+                                    IpAddress:
+                                        req.headers['x-forwarded-for'],
                                 };
                                 User.create(createUserBody)
                                     .then((createdUser) => {
