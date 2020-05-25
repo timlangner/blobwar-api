@@ -8,7 +8,7 @@ exports.logout = (req, res) => {
 
     User.update(
         { SessionId: null, IpAddress: null },
-        { where: { SessionId: SessionId, IpAddress: req.headers['x-forwarded-for'] } }
+        { where: { SessionId: sessionId, IpAddress: req.headers['x-forwarded-for'] } }
     )
         .then(() => {
             res.send("logout")
