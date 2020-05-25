@@ -4,11 +4,11 @@ const Sequelize = db.Sequelize;
 
 // Logout
 exports.logout = (req, res) => {
-    const SessionId = req.params.SessionId;
+    const sessionId = req.body.SessionId;
 
     User.update(
         { SessionId: null, IpAddress: null },
-        { where: { SessionId: SessionId, IpAddress: req.ipInfo.ip } }
+        { where: { SessionId: sessionId, IpAddress: req.ipInfo.ip } }
     )
         .then(() => {
             res.send("logout")

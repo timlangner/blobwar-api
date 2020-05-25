@@ -58,7 +58,7 @@ exports.authDiscord = (req, res) => {
                             SessionId: generateSessionId(40),
                         }, {
                             where: {
-                                DiscordUserId = discordUserBody.id
+                                DiscordUserId: discordUserBody.id
                             }
                         });
 
