@@ -79,7 +79,7 @@ exports.create = (req, res) => {
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
-    const sessionId = req.body.SessionId;
+    const sessionId = req.params.SessionId;
 
     User.findOne({
         where: { SessionId: sessionId, IpAddress: req.ipInfo.ip },
