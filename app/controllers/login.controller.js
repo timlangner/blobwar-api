@@ -53,14 +53,17 @@ exports.authDiscord = (req, res) => {
                     } else {
                         const discordUserBody = JSON.parse(response.body);
                         // Override IpAddress
-                        User.update({
-                            IpAddress: req.ipInfo.ip,
-                            SessionId: generateSessionId(40),
-                        }, {
-                            where: {
-                                DiscordUserId: discordUserBody.id
-                            }
-                        });
+                        User.update(
+                            {
+                                IpAddress: req.headers['x-forwarded-for'],
+                                SessionId: generateSessionId(40),
+                            },
+                            {
+                                where: {
+                                    DiscordUserId: discordUserBody.id,
+                                },
+                            },
+                        );
 
                         // Get User data for DiscordUser
                         User.findOne({
