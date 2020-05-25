@@ -3,6 +3,10 @@ const expressip = require('express-ip');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./app/models');
+const https = require("https");
+let privateKey = fs.readFileSync('ssl/privkey.pem', 'utf8');
+let certificate = fs.readFileSync('ssl/fullchain.pem', 'utf8');
+let credentials = { key: privateKey, cert: certificate };
 
 const app = express();
 db.sequelize.sync();
@@ -29,8 +33,8 @@ require('./app/routes/server.routes')(app);
 require('./app/routes/shop.routes')(app);
 require('./app/routes/others.routes')(app);
 
+let httpsServer = https.createServer(credentials, app);
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-});
+httpsServer.listen(PORT)
