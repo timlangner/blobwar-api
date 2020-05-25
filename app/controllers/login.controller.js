@@ -94,7 +94,7 @@ exports.authDiscord = (req, res) => {
                                 ).then((updatedUser) => {
                                     res.send(updatedUser);
                                 });
-                                }
+                            }
                         });
                     }
                 },
