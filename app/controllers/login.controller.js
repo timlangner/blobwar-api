@@ -79,22 +79,22 @@ exports.authDiscord = (req, res) => {
                                         });
                                     });
                             } else {
-                                    // Override IpAddress & SessionId
-                                    User.update(
-                                        {
-                                            IpAddress: req.clientIp,
-                                            SessionId: generateSessionId(40),
+                                // Override IpAddress & SessionId
+                                User.update(
+                                    {
+                                        IpAddress: req.clientIp,
+                                        SessionId: generateSessionId(40),
+                                    },
+                                    {
+                                        where: {
+                                            DiscordUserId:
+                                                discordUserBody.id,
                                         },
-                                        {
-                                            where: {
-                                                DiscordUserId:
-                                                    discordUserBody.id,
-                                            },
-                                        },
-                                    ).then((updatedUser) => {
-                                        res.send(updatedUser);
-                                    });
-                                   }
+                                    },
+                                ).then((updatedUser) => {
+                                    res.send(updatedUser);
+                                });
+                                }
                         });
                     }
                 },
