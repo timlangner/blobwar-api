@@ -63,38 +63,38 @@ exports.authDiscord = (req, res) => {
                                     DiscordUserId: discordUserBody.id,
                                 },
                             },
-                        );
-
-                        // Get User data for DiscordUser
-                        User.findOne({
-                            where: { DiscordUserId: discordUserBody.id },
-                        }).then((user) => {
-                            if (!user) {
-                                // Create user if there's no user with that DiscordUserId
-                                const createUserBody = {
-                                    Username: discordUserBody.username,
-                                    DiscordUserId: discordUserBody.id,
-                                    Email: discordUserBody.email,
-                                    SessionId: generateSessionId(40),
-                                    IpAddress: req.clientIp,
-                                };
-                                User.create(createUserBody)
-                                    .then((createdUser) => {
-                                        res.status(201).send(
-                                            createdUser,
-                                        );
-                                    })
-                                    .catch((err) => {
-                                        console.log(err);
-                                        res.status(500).send({
-                                            message:
-                                                'Some error occurred while creating a user.',
+                        ).then(() => {
+                            // Get User data for DiscordUser
+                            User.findOne({
+                                where: { DiscordUserId: discordUserBody.id },
+                            }).then((user) => {
+                                if (!user) {
+                                    // Create user if there's no user with that DiscordUserId
+                                    const createUserBody = {
+                                        Username: discordUserBody.username,
+                                        DiscordUserId: discordUserBody.id,
+                                        Email: discordUserBody.email,
+                                        SessionId: generateSessionId(40),
+                                        IpAddress: req.clientIp,
+                                    };
+                                    User.create(createUserBody)
+                                        .then((createdUser) => {
+                                            res.status(201).send(
+                                                createdUser,
+                                            );
+                                        })
+                                        .catch((err) => {
+                                            console.log(err);
+                                            res.status(500).send({
+                                                message:
+                                                    'Some error occurred while creating a user.',
+                                            });
                                         });
-                                    });
-                            } else {
-                                res.send(user);
-                            }
-                        });
+                                } else {
+                                    res.send(user);
+                                }
+                            });
+                        })
                     }
                 },
             );
