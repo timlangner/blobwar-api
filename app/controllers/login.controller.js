@@ -55,7 +55,8 @@ exports.authDiscord = (req, res) => {
                         // Override IpAddress
                         User.update({
                             IpAddress: req.ipInfo.ip,
-                        })
+                            SessionId: generateSessionId(40),
+                        });
 
                         // Get User data for DiscordUser
                         User.findOne({
