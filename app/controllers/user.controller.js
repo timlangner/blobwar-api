@@ -86,7 +86,8 @@ exports.getUserBySessionId = (req, res) => {
     const sessionId = req.body.SessionId;
 
     User.findOne({
-        where: { SessionId: sessionId, IpAddress: req.ipInfo.ip },
+        where: { SessionId: sessionId, IpAddress: (req.headers['x-forwarded-for'] || ''
+                                    ).split(',')[0] },
     })
         .then((user) => {
             if (user) {
