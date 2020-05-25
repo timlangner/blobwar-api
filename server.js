@@ -1,5 +1,5 @@
 const express = require('express');
-const expressip = require('express-ip');
+const requestIp = require('request-ip');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./app/models');
@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware for ipInfo
-app.use(expressip().getIpInfoMiddleware);
+app.use(requestIp.mw());
 
 // listen for routes
 require('./app/routes/user.routes')(app);
