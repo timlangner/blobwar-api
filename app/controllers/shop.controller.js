@@ -4,13 +4,13 @@ const HasSkin = db.hasSkin;
 const User = db.user;
 const Op = db.Sequelize.Op;
 
+// Define references
+Skin.hasOne(HasSkin);
+HasSkin.belongsTo(User);
+HasSkin.belongsTo(Skin);
+
 // Retrieve all premium Skins from the database.
 exports.findPremium = (req, res) => {
-
-    Skin.hasMany(HasSkin);
-    Skin.hasMany(User);
-    HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
-    HasSkin.belongsTo(Skin, { targetKey: 'Id', foreignKey: 'SkinId' });
     Skin.findAll({
         attributes: ['Id'],
         include: [
@@ -59,10 +59,6 @@ exports.findPremium = (req, res) => {
 
 // Retrieve all free Skins from the database.
 exports.findFree = (req, res) => {
-    Skin.hasMany(HasSkin);
-    Skin.hasMany(User);
-    HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
-    HasSkin.belongsTo(Skin, { targetKey: 'Id', foreignKey: 'SkinId' });
     Skin.findAll({
         attributes: ['Id'],
         include: [
@@ -109,10 +105,6 @@ exports.findFree = (req, res) => {
 
 // Retrieve all level Skins from the database.
 exports.findLevel = (req, res) => {
-    Skin.hasMany(HasSkin);
-    Skin.hasMany(User);
-    HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
-    HasSkin.belongsTo(Skin, { targetKey: 'Id', foreignKey: 'SkinId' });
     Skin.findAll({
         attributes: ['Id'],
         include: [
@@ -161,10 +153,6 @@ exports.findLevel = (req, res) => {
 
 // Find all skins of a user
 exports.findOwned = (req, res) => {
-    Skin.hasMany(HasSkin);
-    Skin.hasMany(User);
-    HasSkin.belongsTo(User, { targetKey: 'Id', foreignKey: 'UserId' });
-    HasSkin.belongsTo(Skin, { targetKey: 'Id', foreignKey: 'SkinId' });
     Skin.findAll({
         attributes: ['Id', 'Name', 'Price'],
         include: [
