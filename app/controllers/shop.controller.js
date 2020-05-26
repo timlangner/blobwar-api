@@ -37,10 +37,7 @@ exports.findPremium = (req, res) => {
                         Xp: 0,
                         Private: 0,
                         [Op.not]: [{ Id: { [Op.in]: premiumSkinIds } }],
-                    },
-                    order: [
-                        ['Price', 'ASC']
-                    ]
+                    }
                 }).then((premiumSkins) => {
                     res.send(premiumSkins);
                 });
