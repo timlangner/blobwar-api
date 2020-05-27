@@ -191,8 +191,12 @@ exports.addSkin = (req, res) => {
         UserId: parseInt(req.params.id),
         SkinId: req.body.SkinId,
     })
-        .then((data) => {
-            res.send(data);
+        .then((createdSkin) => {
+            res.status(409).send({
+                message: `You have successfully claimed the "skin" ${JSON.parse(
+                    createdSkin.dataValues.Name,
+                )}`,
+            });
         })
         .catch((err) => {
             console.log(err);
