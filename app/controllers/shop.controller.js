@@ -27,7 +27,7 @@ exports.findPremium = (req, res) => {
             ownedUserSkins.forEach((id) => {
                 premiumSkinIds.push(id.dataValues.Id);
             });
-            if (premiumSkinIds && premiumSkinIds.length >= 0) {
+            if (premiumSkinIds && premiumSkinIds.length > 0) {
                 Skin.findAll({
                     attributes: ['Id', 'Price', 'Name', 'Xp'],
                     where: {
@@ -43,8 +43,18 @@ exports.findPremium = (req, res) => {
                     res.send(premiumSkins);
                 });
             } else {
-                res.status(204).send({
-                    message: 'The user already owns all premium skins',
+                Skin.findAll({
+                    attributes: ['Id', 'Price', 'Name', 'Xp'],
+                    where: {
+                        Price: {
+                            [Op.gt]: 0,
+                        },
+                        Xp: 0,
+                        Private: 0,
+                    },
+                    order: [[db.Sequelize.col('Price'), 'ASC']],
+                }).then((premiumSkins) => {
+                    res.send(premiumSkins);
                 });
             }
         })
@@ -89,8 +99,15 @@ exports.findFree = (req, res) => {
                     res.send(freeSkins);
                 });
             } else {
-                res.status(204).send({
-                    message: 'The user already owns all free skins',
+                Skin.findAll({
+                    attributes: ['Id', 'Price', 'Name', 'Xp'],
+                    where: {
+                        Price: 0,
+                        Xp: 0,
+                        Private: 0,
+                    },
+                }).then((freeSkins) => {
+                    res.send(freeSkins);
                 });
             }
         })
@@ -138,8 +155,18 @@ exports.findLevel = (req, res) => {
                     res.send(levelSkins);
                 });
             } else {
-                res.status(204).send({
-                    message: 'The user already owns all level skins',
+                Skin.findAll({
+                    attributes: ['Id', 'Price', 'Name', 'Xp'],
+                    where: {
+                        Price: 0,
+                        Xp: {
+                            [Op.gt]: 0,
+                        },
+                        Private: 0,
+                    },
+                    order: [[db.Sequelize.col('Xp'), 'ASC']],
+                }).then((levelSkins) => {
+                    res.send(levelSkins);
                 });
             }
         })
