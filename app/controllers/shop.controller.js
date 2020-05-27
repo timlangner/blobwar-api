@@ -27,7 +27,7 @@ exports.findPremium = (req, res) => {
             ownedUserSkins.forEach((id) => {
                 premiumSkinIds.push(id.dataValues.Id);
             });
-            if (premiumSkinIds && premiumSkinIds.length > 0) {
+            if (premiumSkinIds && premiumSkinIds.length >= 0) {
                 Skin.findAll({
                     attributes: ['Id', 'Price', 'Name', 'Xp'],
                     where: {
@@ -38,6 +38,7 @@ exports.findPremium = (req, res) => {
                         Private: 0,
                         [Op.not]: [{ Id: { [Op.in]: premiumSkinIds } }],
                     },
+                    order: [[db.Sequelize.col('Price'), 'ASC']],
                 }).then((premiumSkins) => {
                     res.send(premiumSkins);
                 });
@@ -132,6 +133,7 @@ exports.findLevel = (req, res) => {
                         Private: 0,
                         [Op.not]: [{ Id: { [Op.in]: levelSkinIds } }],
                     },
+                    order: [[db.Sequelize.col('Xp'), 'ASC']],
                 }).then((levelSkins) => {
                     res.send(levelSkins);
                 });
