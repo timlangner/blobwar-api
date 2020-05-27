@@ -233,7 +233,11 @@ exports.addSkin = (req, res) => {
         if (JSON.parse(skin.dataValues.Xp > 0)) {
             User.findOne({
                 attributes: ['Xp'],
-                where: { Id: req.params.id },
+                where: {
+                    Id: req.params.id,
+                    SessionId: req.body.SessionId,
+                    IpAddress: req.clientIp,
+                },
             }).then((user) => {
                 if (
                     JSON.parse(user.dataValues.Xp) >=
@@ -261,21 +265,29 @@ exports.addSkin = (req, res) => {
                 }
             });
         } else {
-            HasSkin.create({
-                UserId: parseInt(req.params.id),
-                SkinId: req.body.SkinId,
-            })
-                .then((createdSkin) => {
-                    res.status(200).send({
-                        message: `You have successfully claimed the ${skinName} skin`,
-                    });
+            User.findOne({
+                where: {
+                    Id: req.params.id,
+                    SessionId: req.body.SessionId,
+                    IpAddress: req.clientIp,
+                },
+            }).then(() => {
+                HasSkin.create({
+                    UserId: parseInt(req.params.id),
+                    SkinId: req.body.SkinId,
                 })
-                .catch((err) => {
-                    console.log(err);
-                    res.status(500).send({
-                        message: `Some error occured while adding the ${skinName} skin`,
+                    .then((createdSkin) => {
+                        res.status(200).send({
+                            message: `You have successfully claimed the ${skinName} skin`,
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.status(500).send({
+                            message: `Some error occured while adding the ${skinName} skin`,
+                        });
                     });
-                });
+            })
         }
     });
 };
@@ -303,7 +315,7 @@ exports.buyPremium = (req, res) => {
                 // Check if user has enough coins to buy the skin
                 User.findOne({
                     attributes: ['Coins'],
-                    where: { Id: req.params.id },
+                    where: { Id: req.params.id, SessionId: req.body.SessionId, IpAddress: req.clientIp },
                 })
                     .then((coins) => {
                         if (
