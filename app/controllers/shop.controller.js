@@ -230,8 +230,9 @@ exports.buyPremium = (req, res) => {
                             JSON.parse(skin.dataValues.Price)
                         ) {
                             res.status(409).send({
-                                message:
-                                    'The User does not have enough coins to buy the skin',
+                                message: `You do not have enough coins to purchase the "skin" ${JSON.parse(
+                                    skin.dataValues.Name,
+                                )}`,
                             });
                         } else {
                             // Adds skin to user
@@ -256,7 +257,11 @@ exports.buyPremium = (req, res) => {
                                         },
                                     )
                                         .then(() => {
-                                            res.send(addedSkin);
+                                            res.status(409).send({
+                                                message: `You have successfully purchased the "skin" ${JSON.parse(
+                                                    skin.dataValues.Name,
+                                                )}`,
+                                            });
                                         })
                                         .catch((err) => {
                                             res.status(500).send({
