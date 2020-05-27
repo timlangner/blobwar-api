@@ -37,7 +37,7 @@ exports.findPremium = (req, res) => {
                         Xp: 0,
                         Private: 0,
                         [Op.not]: [{ Id: { [Op.in]: premiumSkinIds } }],
-                    }
+                    },
                 }).then((premiumSkins) => {
                     res.send(premiumSkins);
                 });
@@ -187,28 +187,70 @@ exports.addSkin = (req, res) => {
         return;
     }
 
-    HasSkin.create({
-        UserId: parseInt(req.params.id),
-        SkinId: req.body.SkinId,
-    })
-        .then((createdSkin) => {
-            res.status(409).send({
-                message: `You have successfully claimed the "skin" ${JSON.parse(
-                    createdSkin.dataValues.Name,
-                )}`,
+    let skinName = '';
+
+    Skin.findOne({
+        attributes: ['Id', 'Name', 'Xp'],
+        where: { Id: req.body.SkinId },
+    }).then((skin) => {
+        skinName = skin.dataValues.Name;
+        if (JSON.parse(skin.dataValues.Xp > 0)) {
+            User.findOne({
+                attributes: ['Xp'],
+                where: { Id: req.params.id },
+            }).then((user) => {
+                console.log(JSON.parse(user.dataValues.Xp));
+                console.log(
+                    JSON.parse(user.dataValues.Xp) >=
+                        JSON.parse(skin.dataValues.Xp),
+                );
+                if (
+                    JSON.parse(user.dataValues.Xp) >=
+                    JSON.parse(skin.dataValues.Xp)
+                ) {
+                    HasSkin.create({
+                        UserId: parseInt(req.params.id),
+                        SkinId: req.body.SkinId,
+                    })
+                        .then((createdSkin) => {
+                            res.status(200).send({
+                                message: `You have successfully claimed the skin ${skinName}`,
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            res.status(500).send({
+                                message: `Some error occured while adding the skin ${skinName}`,
+                            });
+                        });
+                } else {
+                    res.status(409).send({
+                        message: `You do not have enough XP to claim the skin ${skinName}`,
+                    });
+                }
             });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({
-                message: 'Some error occurred while adding a skin to a user.',
-            });
-        });
+        } else {
+            HasSkin.create({
+                UserId: parseInt(req.params.id),
+                SkinId: req.body.SkinId,
+            })
+                .then((createdSkin) => {
+                    res.status(200).send({
+                        message: `You have successfully claimed the skin ${skinName}`,
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send({
+                        message: `Some error occured while adding the skin ${skinName}`,
+                    });
+                });
+        }
+    });
 };
 
 // Add's a skin to a user & update users coins
 exports.buyPremium = (req, res) => {
-
     // Validate request
     if (!req.body) {
         res.status(400).send({
@@ -219,10 +261,10 @@ exports.buyPremium = (req, res) => {
     // Get the skin the user wants to buy
     Skin.findOne({
         attributes: ['Id', 'Name', 'Price'],
-        where: { Id: req.body.SkinId }
+        where: { Id: req.body.SkinId },
     })
         .then((skin) => {
-            if(skin) {
+            if (skin) {
                 // Check if user has enough coins to buy the skin
                 User.findOne({
                     attributes: ['Coins'],
@@ -234,7 +276,7 @@ exports.buyPremium = (req, res) => {
                             JSON.parse(skin.dataValues.Price)
                         ) {
                             res.status(409).send({
-                                message: `You do not have enough coins to purchase the "skin" ${JSON.parse(
+                                message: `You do not have enough coins to purchase the skin ${JSON.parse(
                                     skin.dataValues.Name,
                                 )}`,
                             });
@@ -243,53 +285,51 @@ exports.buyPremium = (req, res) => {
                             HasSkin.create({
                                 UserId: parseInt(req.params.id),
                                 SkinId: req.body.SkinId,
-                            })
-                                .then(addedSkin => {
-                                    // Update users coins
-                                    User.update(
-                                        {
-                                            Coins: db.Sequelize.literal(
-                                                `Coins - ${JSON.parse(
-                                                    skin.dataValues.Price,
-                                                )}`,
-                                            ),
+                            }).then((addedSkin) => {
+                                // Update users coins
+                                User.update(
+                                    {
+                                        Coins: db.Sequelize.literal(
+                                            `Coins - ${JSON.parse(
+                                                skin.dataValues.Price,
+                                            )}`,
+                                        ),
+                                    },
+                                    {
+                                        where: {
+                                            Id: req.params.id,
                                         },
-                                        {
-                                            where: {
-                                                Id: req.params.id,
-                                            },
-                                        },
-                                    )
-                                        .then(() => {
-                                            res.status(409).send({
-                                                message: `You have successfully purchased the "skin" ${JSON.parse(
-                                                    skin.dataValues.Name,
-                                                )}`,
-                                            });
-                                        })
-                                        .catch((err) => {
-                                            res.status(500).send({
-                                                message:
-                                                    err.message ||
-                                                    'Some error occurd while trying to update users coins.',
-                                            });
+                                    },
+                                )
+                                    .then(() => {
+                                        res.status(200).send({
+                                            message: `You have successfully purchased the skin ${JSON.parse(
+                                                skin.dataValues.Name,
+                                            )}`,
                                         });
-                                        })
+                                    })
+                                    .catch((err) => {
+                                        res.status(500).send({
+                                            message:
+                                                err.message ||
+                                                'Some error occurd while trying to update users coins.',
+                                        });
+                                    });
+                            });
                         }
                     })
                     .catch((err) => {
                         res.status(500).send({
-                            message: 'Error retrieving User with id=' + req.params.id,
+                            message:
+                                'Error retrieving User with id=' +
+                                req.params.id,
                         });
                     });
-                
             }
         })
         .catch((err) => {
             res.status(500).send({
-                message:
-                    'Error retrieving skin with id=' +
-                    req.body.SkinId,
+                message: 'Error retrieving skin with id=' + req.body.SkinId,
             });
         });
 };
