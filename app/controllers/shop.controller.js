@@ -214,18 +214,18 @@ exports.addSkin = (req, res) => {
                     })
                         .then((createdSkin) => {
                             res.status(200).send({
-                                message: `You have successfully claimed the skin ${skinName}`,
+                                message: `You have successfully claimed the ${skinName} skin`,
                             });
                         })
                         .catch((err) => {
                             console.log(err);
                             res.status(500).send({
-                                message: `Some error occured while adding the skin ${skinName}`,
+                                message: `Some error occured while adding the ${skinName} skin`,
                             });
                         });
                 } else {
                     res.status(409).send({
-                        message: `You do not have enough XP to claim the skin ${skinName}`,
+                        message: `You do not have enough XP to claim the ${skinName} skin`,
                     });
                 }
             });
@@ -236,13 +236,13 @@ exports.addSkin = (req, res) => {
             })
                 .then((createdSkin) => {
                     res.status(200).send({
-                        message: `You have successfully claimed the skin ${skinName}`,
+                        message: `You have successfully claimed the ${skinName} skin`,
                     });
                 })
                 .catch((err) => {
                     console.log(err);
                     res.status(500).send({
-                        message: `Some error occured while adding the skin ${skinName}`,
+                        message: `Some error occured while adding the ${skinName} skin`,
                     });
                 });
         }
@@ -258,12 +258,16 @@ exports.buyPremium = (req, res) => {
         });
         return;
     }
+
+    let skinName = '';
+
     // Get the skin the user wants to buy
     Skin.findOne({
         attributes: ['Id', 'Name', 'Price'],
         where: { Id: req.body.SkinId },
     })
         .then((skin) => {
+            skinName = skin.dataValues.Name;
             if (skin) {
                 // Check if user has enough coins to buy the skin
                 User.findOne({
@@ -276,9 +280,7 @@ exports.buyPremium = (req, res) => {
                             JSON.parse(skin.dataValues.Price)
                         ) {
                             res.status(409).send({
-                                message: `You do not have enough coins to purchase the skin ${JSON.parse(
-                                    skin.dataValues.Name,
-                                )}`,
+                                message: `You do not have enough coins to purchase the ${skinName} skin`,
                             });
                         } else {
                             // Adds skin to user
@@ -303,9 +305,7 @@ exports.buyPremium = (req, res) => {
                                 )
                                     .then(() => {
                                         res.status(200).send({
-                                            message: `You have successfully purchased the skin ${JSON.parse(
-                                                skin.dataValues.Name,
-                                            )}`,
+                                            message: `You have successfully purchased the ${skinName} skin`,
                                         });
                                     })
                                     .catch((err) => {
