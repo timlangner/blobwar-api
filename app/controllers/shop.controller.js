@@ -193,11 +193,18 @@ exports.findOwned = (req, res) => {
             },
         ],
     })
-        .then((data) => {
-            res.send(data);
+        .then((ownedSkins) => {
+            if (ownedSkins.length === 0) {
+                res.json({
+                    title: 'No Skins!',
+                    message:
+                        `Go play & farm some coins, so this won't be empty anymore soon ;)`,
+                });
+            } else {
+                res.send(ownedSkins);
+            }
         })
         .catch((err) => {
-            console.log(err);
             res.status(500).send({
                 message:
                     'Error retrieving all Skins from User with id=' +
@@ -228,11 +235,6 @@ exports.addSkin = (req, res) => {
                 attributes: ['Xp'],
                 where: { Id: req.params.id },
             }).then((user) => {
-                console.log(JSON.parse(user.dataValues.Xp));
-                console.log(
-                    JSON.parse(user.dataValues.Xp) >=
-                        JSON.parse(skin.dataValues.Xp),
-                );
                 if (
                     JSON.parse(user.dataValues.Xp) >=
                     JSON.parse(skin.dataValues.Xp)
