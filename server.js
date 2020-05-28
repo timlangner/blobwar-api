@@ -13,7 +13,8 @@ const app = express();
 db.sequelize.sync();
 
 var corsOptions = {
-    origin: 'https://blobwar.io',
+    // origin: 'https://blobwar.io',
+    origin: 'https://localhost:8081',
 };
 
 app.use(cors(corsOptions));

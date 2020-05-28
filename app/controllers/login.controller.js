@@ -1,6 +1,7 @@
 const request = require('request');
 const db = require('../models');
 const User = db.user;
+const HasSkin = db.hasSkin;
 
 // SessionId Generator
 function generateSessionId(length) {
@@ -20,6 +21,7 @@ exports.authDiscord = (req, res) => {
     const CLIENT_ID = '649345140577533952';
     const CLIENT_SECRET = 't_u5HfiZd66Ckz32eDXLyL9s7xoeFMxS';
     const REDIRECT_URI = `https://blobwar.io/auth/discord`;
+    const GUILD_ID = '632515781070028811';
 
     request.post(
         'https://discordapp.com/api/oauth2/token',
@@ -73,6 +75,7 @@ exports.authDiscord = (req, res) => {
                                         DiscordUserId: discordUserBody.id,
                                     },
                                 }).then((user) => {
+                                    const userBody = JSON.parse(user.body);
                                     if (!user) {
                                         // Create user if there's no user with that DiscordUserId
                                         const createUserBody = {
@@ -84,6 +87,46 @@ exports.authDiscord = (req, res) => {
                                         };
                                         User.create(createUserBody)
                                             .then((createdUser) => {
+                                                const createdUserBody = JSON.parse(
+                                                    createdUser.body,
+                                                );
+                                                // Check if user boosted the discord server
+                                                request(
+                                                    {
+                                                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
+                                                        headers: {
+                                                            Authorization: `Bearer ${tokenBody.access_token}`,
+                                                        },
+                                                        rejectUnauthorized: false,
+                                                    },
+                                                    (err, response) => {
+                                                        if (err) {
+                                                            res.status(500).send({
+                                                                message: 'Error retrieving Guild Member',
+                                                            });
+                                                        } else {
+                                                            const guildMemberBody = JSON.parse(response.body);
+                                                            if (guildMemberBody.premium_since) {
+                                                                // User is an active booster
+                                                                HasSkin.create({
+                                                                    UserId:
+                                                                        createdUserBody.id,
+                                                                    SkinId: 40,
+                                                                })
+                                                                    .then(console.log)
+                                                                    .catch(
+                                                                        (
+                                                                            err,
+                                                                        ) => {
+                                                                            console.log(
+                                                                                err,
+                                                                            );
+                                                                        },
+                                                                    );
+                                                            }
+                                                        }
+                                                    },
+                                                )
                                                 res.status(201).send(
                                                     createdUser,
                                                 );
@@ -96,6 +139,90 @@ exports.authDiscord = (req, res) => {
                                                 });
                                             });
                                     } else {
+                                        // Check if user boosted the discord server
+                                        request(
+                                            {
+                                                url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
+                                                headers: {
+                                                    Authorization: `Bearer ${tokenBody.access_token}`,
+                                                },
+                                                rejectUnauthorized: false,
+                                            },
+                                            (err, response) => {
+                                                if (err) {
+                                                    res.status(500).send(
+                                                        {
+                                                            message:
+                                                                'Error retrieving Guild Member',
+                                                        },
+                                                    );
+                                                } else {
+                                                    const guildMemberBody = JSON.parse(
+                                                        response.body,
+                                                    );
+                                                    if (
+                                                        guildMemberBody.premium_since
+                                                    ) {
+                                                        // User is an active booster
+                                                        HasSkin.create({
+                                                            UserId:
+                                                                createdUserBody.id,
+                                                            SkinId: 40,
+                                                        })
+                                                            .then(
+                                                                console.log,
+                                                            )
+                                                            .catch(
+                                                                (
+                                                                    err,
+                                                                ) => {
+                                                                    console.log(
+                                                                        err,
+                                                                    );
+                                                                },
+                                                            );
+                                                    } else {
+                                                        // User is not an active booster
+                                                        request(
+                                                            {
+                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${userBody.Id}`,
+                                                                headers: {
+                                                                    Authorization: `Bearer ${tokenBody.access_token}`,
+                                                                },
+                                                                rejectUnauthorized: false,
+                                                            },
+                                                            (err, response) => {
+                                                                if (err) {
+                                                                    res.status(
+                                                                        500,
+                                                                    ).send({
+                                                                        message:
+                                                                            'Error retrieving owned skins',
+                                                                    });
+                                                                } else {
+                                                                    const ownedSkinsBody = JSON.parse(
+                                                                        response.body,
+                                                                    );
+                                                                    const foundNitroSkin = ownedSkinsBody.find((skin) => {
+                                                                        return skin.Id === 40;
+                                                                    })
+
+                                                                    if (foundNitroSkin) {
+                                                                        // User is not an active booster but still owns the Nitro skin
+                                                                        HasSkin.destroy({
+                                                                            where: {
+                                                                                UserId: userBody.Id,
+                                                                                SkinId: 40
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            },
+                                                        );
+                                                    }
+                                                }
+                                            },
+                                        );
                                         res.send(user);
                                     }
                                 });
