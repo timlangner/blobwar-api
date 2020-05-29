@@ -95,7 +95,7 @@ exports.getUserBySessionId = (req, res) => {
                 console.log(
                     'RequestURL (session)',
                     `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(
-                        user.dataValues.Id,
+                        user.dataValues.DiscordUserId,
                     )}`,
                 );
                 request(
