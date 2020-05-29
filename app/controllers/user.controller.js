@@ -1,4 +1,5 @@
 const db = require('../models');
+const request = require('request');
 const User = db.user;
 const HasSkin = db.hasSkin;
 const Sequelize = db.Sequelize;
@@ -91,6 +92,12 @@ exports.getUserBySessionId = (req, res) => {
             if (user) {
                 // Check if user boosted the discord server
                 console.log('Check if boosted (session)');
+                console.log(
+                    'RequestURL (session)',
+                    `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(
+                        user.dataValues.Id,
+                    )}`,
+                );
                 request(
                     {
                         url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(user.dataValues.Id)}`,
