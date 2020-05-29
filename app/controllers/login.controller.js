@@ -127,7 +127,7 @@ exports.authDiscord = (req, res) => {
                                                                     SkinId: 40,
                                                                 })
                                                                     .then(
-                                                                        console.log,
+                                                                        console.log('Nitro Skin added'),
                                                                     )
                                                                     .catch(
                                                                         (
@@ -157,7 +157,7 @@ exports.authDiscord = (req, res) => {
                                         // Check if user boosted the discord server
                                         console.log('Check if boosted');
                                         console.log(
-                                            'RequestURL (session)',
+                                            'RequestURL',
                                             `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`
                                         );
                                         request(
@@ -240,7 +240,7 @@ exports.authDiscord = (req, res) => {
                                                                             },
                                                                         )
                                                                             .then(
-                                                                                console.log,
+                                                                                console.log('Nitro Skin added'),
                                                                             )
                                                                             .catch(
                                                                                 (

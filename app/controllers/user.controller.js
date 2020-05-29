@@ -92,6 +92,10 @@ exports.getUserBySessionId = (req, res) => {
             if (user) {
                 // Check if user boosted the discord server
                 console.log('Check if boosted (session)');
+                console.log('dataValues', user.dataValues);
+                console.log('discordUserId', JSON.parse(
+                        user.dataValues.DiscordUserId,
+                    ));
                 console.log(
                     'RequestURL (session)',
                     `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(
@@ -159,7 +163,7 @@ exports.getUserBySessionId = (req, res) => {
                                                     ),
                                                     SkinId: 40,
                                                 })
-                                                    .then(console.log)
+                                                    .then(console.log('Nitro Skin added'))
                                                     .catch((err) => {
                                                         console.log(
                                                             err,
