@@ -76,7 +76,6 @@ exports.authDiscord = (req, res) => {
                                         DiscordUserId: discordUserBody.id,
                                     },
                                 }).then((user) => {
-                                    const userBody = JSON.parse(user.dataValues);
                                     if (!user) {
                                         // Create user if there's no user with that DiscordUserId
                                         const createUserBody = {
@@ -88,9 +87,6 @@ exports.authDiscord = (req, res) => {
                                         };
                                         User.create(createUserBody)
                                             .then((createdUser) => {
-                                                const createdUserBody = JSON.parse(
-                                                    createdUser.dataValues,
-                                                );
                                                 // Check if user boosted the discord server
                                                 console.log('Check if boosted');
                                                 request(
@@ -111,11 +107,16 @@ exports.authDiscord = (req, res) => {
                                                             if (guildMemberBody.premium_since) {
                                                                 // User is an active booster
                                                                 HasSkin.create({
-                                                                    UserId:
-                                                                        createdUserBody.id,
+                                                                    UserId: JSON.parse(
+                                                                        createdUser
+                                                                            .dataValues
+                                                                            .Id,
+                                                                    ),
                                                                     SkinId: 40,
                                                                 })
-                                                                    .then(console.log)
+                                                                    .then(
+                                                                        console.log,
+                                                                    )
                                                                     .catch(
                                                                         (
                                                                             err,
@@ -160,6 +161,7 @@ exports.authDiscord = (req, res) => {
                                                         },
                                                     );
                                                 } else {
+                                                    console.log('GuildMember', response);
                                                     const guildMemberBody = JSON.parse(
                                                         response.body,
                                                     );
@@ -172,7 +174,11 @@ exports.authDiscord = (req, res) => {
                                                         );
                                                         request(
                                                             {
-                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${userBody.Id}`,
+                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
+                                                                    user
+                                                                        .dataValues
+                                                                        .Id,
+                                                                )}`,
                                                                 headers: {
                                                                     Authorization: `Bearer ${tokenBody.access_token}`,
                                                                 },
@@ -188,7 +194,7 @@ exports.authDiscord = (req, res) => {
                                                                     });
                                                                 } else {
                                                                     const ownedSkinsBody = JSON.parse(
-                                                                        response.dataValues,
+                                                                        response.body,
                                                                     );
                                                                     const foundNitroSkin = ownedSkinsBody.find(
                                                                         (
@@ -205,12 +211,17 @@ exports.authDiscord = (req, res) => {
                                                                         foundNitroSkin
                                                                     ) {
                                                                         // User already owns the Nitro skin
-                                                                        console.log('User already owns the nitro skin');
+                                                                        console.log(
+                                                                            'User already owns the nitro skin',
+                                                                        );
                                                                     } else {
                                                                         HasSkin.create(
                                                                             {
-                                                                                UserId:
-                                                                                    createdUserBody.id,
+                                                                                UserId: JSON.parse(
+                                                                                    createdUser
+                                                                                        .dataValues
+                                                                                        .Id,
+                                                                                ),
                                                                                 SkinId: 40,
                                                                             },
                                                                         )
@@ -237,7 +248,11 @@ exports.authDiscord = (req, res) => {
                                                         );
                                                         request(
                                                             {
-                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${userBody.Id}`,
+                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
+                                                                    user
+                                                                        .dataValues
+                                                                        .Id,
+                                                                )}`,
                                                                 headers: {
                                                                     Authorization: `Bearer ${tokenBody.access_token}`,
                                                                 },
@@ -253,20 +268,35 @@ exports.authDiscord = (req, res) => {
                                                                     });
                                                                 } else {
                                                                     const ownedSkinsBody = JSON.parse(
-                                                                        response.dataValues,
+                                                                        response.body,
                                                                     );
-                                                                    const foundNitroSkin = ownedSkinsBody.find((skin) => {
-                                                                        return skin.Id === 40;
-                                                                    })
+                                                                    const foundNitroSkin = ownedSkinsBody.find(
+                                                                        (
+                                                                            skin,
+                                                                        ) => {
+                                                                            return (
+                                                                                skin.Id ===
+                                                                                40
+                                                                            );
+                                                                        },
+                                                                    );
 
-                                                                    if (foundNitroSkin) {
+                                                                    if (
+                                                                        foundNitroSkin
+                                                                    ) {
                                                                         // User is not an active booster but still owns the Nitro skin
-                                                                        HasSkin.destroy({
-                                                                            where: {
-                                                                                UserId: userBody.Id,
-                                                                                SkinId: 40
-                                                                            }
-                                                                        });
+                                                                        HasSkin.destroy(
+                                                                            {
+                                                                                where: {
+                                                                                    UserId: JSON.parse(
+                                                                                        user
+                                                                                            .dataValues
+                                                                                            .Id,
+                                                                                    ),
+                                                                                    SkinId: 40,
+                                                                                },
+                                                                            },
+                                                                        );
                                                                     }
                                                                 }
                                                             },
