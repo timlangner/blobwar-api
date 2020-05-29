@@ -22,6 +22,8 @@ exports.authDiscord = (req, res) => {
     const CLIENT_SECRET = 't_u5HfiZd66Ckz32eDXLyL9s7xoeFMxS';
     const REDIRECT_URI = `https://blobwar.io/auth/discord`;
     const GUILD_ID = '632515781070028811';
+    const BOT_TOKEN =
+        'NjQ5MzQ1MTQwNTc3NTMzOTUy.XtC9ww.dfyf0PKrMhaUzuV28ESRtILG7Vk';
 
     request.post(
         'https://discordapp.com/api/oauth2/token',
@@ -88,24 +90,33 @@ exports.authDiscord = (req, res) => {
                                             .then((createdUser) => {
                                                 // Check if user boosted the discord server
                                                 console.log('Check if boosted');
-                                                console.log('RequestURL', `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`);
                                                 request(
                                                     {
                                                         url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
                                                         headers: {
-                                                            Authorization: `Bearer ${tokenBody.access_token}`,
+                                                            Authorization: `Bot ${BOT_TOKEN}`,
                                                         },
                                                         rejectUnauthorized: false,
                                                     },
                                                     (err, response) => {
                                                         if (err) {
-                                                            res.status(500).send({
-                                                                message: 'Error retrieving Guild Member',
+                                                            res.status(
+                                                                500,
+                                                            ).send({
+                                                                message:
+                                                                    'Error retrieving Guild Member',
                                                             });
                                                         } else {
-                                                            console.log('Guild Member', response.body);
-                                                            const guildMemberBody = JSON.parse(response.body);
-                                                            if (guildMemberBody.premium_since) {
+                                                            console.log(
+                                                                'Guild Member',
+                                                                response.body,
+                                                            );
+                                                            const guildMemberBody = JSON.parse(
+                                                                response.body,
+                                                            );
+                                                            if (
+                                                                guildMemberBody.premium_since
+                                                            ) {
                                                                 // User is an active booster
                                                                 HasSkin.create({
                                                                     UserId: JSON.parse(
@@ -130,7 +141,7 @@ exports.authDiscord = (req, res) => {
                                                             }
                                                         }
                                                     },
-                                                )
+                                                );
                                                 res.status(201).send(
                                                     createdUser,
                                                 );
@@ -145,29 +156,25 @@ exports.authDiscord = (req, res) => {
                                     } else {
                                         // Check if user boosted the discord server
                                         console.log('Check if boosted');
-                                        console.log(
-                                            'RequestURL',
-                                            `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
-                                        );
-                                        console.log('tokenBody', tokenBody.access_token);
                                         request(
                                             {
                                                 url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
                                                 headers: {
-                                                    Authorization: `Bearer ${tokenBody.access_token}`,
+                                                    Authorization: `Bot ${BOT_TOKEN}`,
                                                 },
                                                 rejectUnauthorized: false,
                                             },
                                             (err, response) => {
                                                 if (err) {
-                                                    res.status(500).send(
-                                                        {
-                                                            message:
-                                                                'Error retrieving Guild Member',
-                                                        },
-                                                    );
+                                                    res.status(500).send({
+                                                        message:
+                                                            'Error retrieving Guild Member',
+                                                    });
                                                 } else {
-                                                    console.log('GuildMember', response.body);
+                                                    console.log(
+                                                        'GuildMember',
+                                                        response.body,
+                                                    );
                                                     const guildMemberBody = JSON.parse(
                                                         response.body,
                                                     );
