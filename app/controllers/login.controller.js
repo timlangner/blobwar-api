@@ -102,7 +102,7 @@ exports.authDiscord = (req, res) => {
                                                                 message: 'Error retrieving Guild Member',
                                                             });
                                                         } else {
-                                                            console.log('Guild Member', response);
+                                                            console.log('Guild Member', response.body);
                                                             const guildMemberBody = JSON.parse(response.body);
                                                             if (guildMemberBody.premium_since) {
                                                                 // User is an active booster
@@ -144,6 +144,7 @@ exports.authDiscord = (req, res) => {
                                     } else {
                                         // Check if user boosted the discord server
                                         console.log('Check if boosted');
+                                        console.log('tokenBody', tokenBody);
                                         request(
                                             {
                                                 url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
@@ -161,7 +162,7 @@ exports.authDiscord = (req, res) => {
                                                         },
                                                     );
                                                 } else {
-                                                    console.log('GuildMember', response);
+                                                    console.log('GuildMember', response.body);
                                                     const guildMemberBody = JSON.parse(
                                                         response.body,
                                                     );
