@@ -100,7 +100,7 @@ exports.getUserBySessionId = (req, res) => {
                 );
                 request(
                     {
-                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(user.dataValues.Id)}`,
+                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(user.dataValues.DiscordUserId)}`,
                         headers: {
                             Authorization: `Bot ${BOT_TOKEN}`,
                         },
@@ -217,7 +217,6 @@ exports.getUserBySessionId = (req, res) => {
                         }
                     },
                 );
-                console.log('res send(user)', user);
                 res.send(user);
             }
         })
