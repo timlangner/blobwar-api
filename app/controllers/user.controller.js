@@ -210,6 +210,7 @@ exports.getUserBySessionId = (req, res) => {
                         }
                     },
                 );
+                console.log('res send(user)', user);
                 res.send(user);
             }
         })
