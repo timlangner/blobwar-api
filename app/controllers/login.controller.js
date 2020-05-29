@@ -231,7 +231,7 @@ exports.authDiscord = (req, res) => {
                                                                         HasSkin.create(
                                                                             {
                                                                                 UserId: JSON.parse(
-                                                                                    createdUser
+                                                                                    user
                                                                                         .dataValues
                                                                                         .Id,
                                                                                 ),
