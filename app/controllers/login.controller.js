@@ -76,7 +76,7 @@ exports.authDiscord = (req, res) => {
                                         DiscordUserId: discordUserBody.id,
                                     },
                                 }).then((user) => {
-                                    const userBody = JSON.parse(user.body);
+                                    const userBody = JSON.parse(user.dataValues);
                                     if (!user) {
                                         // Create user if there's no user with that DiscordUserId
                                         const createUserBody = {
@@ -89,7 +89,7 @@ exports.authDiscord = (req, res) => {
                                         User.create(createUserBody)
                                             .then((createdUser) => {
                                                 const createdUserBody = JSON.parse(
-                                                    createdUser.body,
+                                                    createdUser.dataValues,
                                                 );
                                                 // Check if user boosted the discord server
                                                 console.log('Check if boosted');
@@ -188,7 +188,7 @@ exports.authDiscord = (req, res) => {
                                                                     });
                                                                 } else {
                                                                     const ownedSkinsBody = JSON.parse(
-                                                                        response.body,
+                                                                        response.dataValues,
                                                                     );
                                                                     const foundNitroSkin = ownedSkinsBody.find(
                                                                         (
@@ -253,7 +253,7 @@ exports.authDiscord = (req, res) => {
                                                                     });
                                                                 } else {
                                                                     const ownedSkinsBody = JSON.parse(
-                                                                        response.body,
+                                                                        response.dataValues,
                                                                     );
                                                                     const foundNitroSkin = ownedSkinsBody.find((skin) => {
                                                                         return skin.Id === 40;
