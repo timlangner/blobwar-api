@@ -90,7 +90,7 @@ exports.getUserBySessionId = (req, res) => {
         .then((user) => {
             if (user) {
                 // Check if user boosted the discord server
-                console.log('Check if boosted');
+                console.log('Check if boosted (session)');
                 request(
                     {
                         url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(user.dataValues.Id)}`,
@@ -112,7 +112,7 @@ exports.getUserBySessionId = (req, res) => {
                             );
                             if (guildMemberBody.premium_since) {
                                 // User is an active booster
-                                console.log('Active booster');
+                                console.log('Active booster (session)');
                                 request(
                                     {
                                         url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
@@ -141,7 +141,7 @@ exports.getUserBySessionId = (req, res) => {
                                             if (foundNitroSkin) {
                                                 // User already owns the Nitro skin
                                                 console.log(
-                                                    'User already owns the nitro skin',
+                                                    'User already owns the nitro skin (session)',
                                                 );
                                             } else {
                                                 HasSkin.create({
@@ -164,7 +164,7 @@ exports.getUserBySessionId = (req, res) => {
                                 );
                             } else {
                                 // User is not an active booster
-                                console.log('Not an active booster');
+                                console.log('Not an active booster (session)');
                                 request(
                                     {
                                         url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
