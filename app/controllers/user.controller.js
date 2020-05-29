@@ -140,32 +140,24 @@ exports.getUserBySessionId = (req, res) => {
                                             const ownedSkinsBody = JSON.parse(
                                                 response.body,
                                             );
-                                            const foundNitroSkin = ownedSkinsBody.find(
-                                                (skin) => {
+                                            if (ownedSkinsBody) {
+                                                const foundNitroSkin = ownedSkinsBody.find((skin) => {
                                                     return skin.Id === 40;
-                                                },
-                                            );
+                                                });
 
-                                            if (foundNitroSkin) {
-                                                // User already owns the Nitro skin
-                                                console.log(
-                                                    'User already owns the nitro skin (session)',
-                                                );
-                                            } else {
-                                                HasSkin.create({
-                                                    UserId: JSON.parse(
-                                                        user.dataValues.Id,
-                                                    ),
-                                                    SkinId: 40,
-                                                })
-                                                    .then(
-                                                        console.log(
-                                                            'Nitro Skin added',
-                                                        ),
-                                                    )
-                                                    .catch((err) => {
-                                                        console.log(err);
-                                                    });
+                                                if (foundNitroSkin) {
+                                                    // User already owns the Nitro skin
+                                                    console.log('User already owns the nitro skin (session)');
+                                                } else {
+                                                    HasSkin.create({
+                                                        UserId: JSON.parse(user.dataValues.Id),
+                                                        SkinId: 40,
+                                                    })
+                                                        .then(console.log('Nitro Skin added'))
+                                                        .catch((err) => {
+                                                            console.log(err);
+                                                        });
+                                                }
                                             }
                                         }
                                     },
@@ -190,22 +182,25 @@ exports.getUserBySessionId = (req, res) => {
                                             const ownedSkinsBody = JSON.parse(
                                                 response.body,
                                             );
-                                            const foundNitroSkin = ownedSkinsBody.find(
-                                                (skin) => {
-                                                    return skin.Id === 40;
-                                                },
-                                            );
-
-                                            if (foundNitroSkin) {
-                                                // User is not an active booster but still owns the Nitro skin
-                                                HasSkin.destroy({
-                                                    where: {
-                                                        UserId: JSON.parse(
-                                                            user.dataValues.Id,
-                                                        ),
-                                                        SkinId: 40,
+                                            if (ownedSkinsBody) {
+                                                const foundNitroSkin = ownedSkinsBody.find(
+                                                    (skin) => {
+                                                        return skin.Id === 40;
                                                     },
-                                                });
+                                                );
+
+                                                if (foundNitroSkin) {
+                                                    // User is not an active booster but still owns the Nitro skin
+                                                    HasSkin.destroy({
+                                                        where: {
+                                                            UserId: JSON.parse(
+                                                                user.dataValues
+                                                                    .Id,
+                                                            ),
+                                                            SkinId: 40,
+                                                        },
+                                                    });
+                                                }
                                             }
                                         }
                                     },
