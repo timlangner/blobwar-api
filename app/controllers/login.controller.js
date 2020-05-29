@@ -156,6 +156,10 @@ exports.authDiscord = (req, res) => {
                                     } else {
                                         // Check if user boosted the discord server
                                         console.log('Check if boosted');
+                                        console.log(
+                                            'RequestURL (session)',
+                                            `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`
+                                        );
                                         request(
                                             {
                                                 url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
