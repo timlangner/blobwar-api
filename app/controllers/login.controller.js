@@ -57,6 +57,7 @@ exports.authDiscord = (req, res) => {
                             });
                         } else {
                             const discordUserBody = JSON.parse(response.body);
+                            console.log('discordUserBody', discordUserBody);
                             // Override IpAddress
                             User.update(
                                 {
@@ -91,6 +92,7 @@ exports.authDiscord = (req, res) => {
                                                     createdUser.body,
                                                 );
                                                 // Check if user boosted the discord server
+                                                console.log('Check if boosted');
                                                 request(
                                                     {
                                                         url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
@@ -140,6 +142,7 @@ exports.authDiscord = (req, res) => {
                                             });
                                     } else {
                                         // Check if user boosted the discord server
+                                        console.log('Check if boosted');
                                         request(
                                             {
                                                 url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
@@ -164,25 +167,74 @@ exports.authDiscord = (req, res) => {
                                                         guildMemberBody.premium_since
                                                     ) {
                                                         // User is an active booster
-                                                        HasSkin.create({
-                                                            UserId:
-                                                                createdUserBody.id,
-                                                            SkinId: 40,
-                                                        })
-                                                            .then(
-                                                                console.log,
-                                                            )
-                                                            .catch(
-                                                                (
-                                                                    err,
-                                                                ) => {
-                                                                    console.log(
-                                                                        err,
-                                                                    );
+                                                        console.log(
+                                                            'Active booster',
+                                                        );
+                                                        request(
+                                                            {
+                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${userBody.Id}`,
+                                                                headers: {
+                                                                    Authorization: `Bearer ${tokenBody.access_token}`,
                                                                 },
-                                                            );
+                                                                rejectUnauthorized: false,
+                                                            },
+                                                            (err, response) => {
+                                                                if (err) {
+                                                                    res.status(
+                                                                        500,
+                                                                    ).send({
+                                                                        message:
+                                                                            'Error retrieving owned skins',
+                                                                    });
+                                                                } else {
+                                                                    const ownedSkinsBody = JSON.parse(
+                                                                        response.body,
+                                                                    );
+                                                                    const foundNitroSkin = ownedSkinsBody.find(
+                                                                        (
+                                                                            skin,
+                                                                        ) => {
+                                                                            return (
+                                                                                skin.Id ===
+                                                                                40
+                                                                            );
+                                                                        },
+                                                                    );
+
+                                                                    if (
+                                                                        foundNitroSkin
+                                                                    ) {
+                                                                        // User already owns the Nitro skin
+                                                                        console.log('User already owns the nitro skin');
+                                                                    } else {
+                                                                        HasSkin.create(
+                                                                            {
+                                                                                UserId:
+                                                                                    createdUserBody.id,
+                                                                                SkinId: 40,
+                                                                            },
+                                                                        )
+                                                                            .then(
+                                                                                console.log,
+                                                                            )
+                                                                            .catch(
+                                                                                (
+                                                                                    err,
+                                                                                ) => {
+                                                                                    console.log(
+                                                                                        err,
+                                                                                    );
+                                                                                },
+                                                                            );
+                                                                    }
+                                                                }
+                                                            },
+                                                        );
                                                     } else {
                                                         // User is not an active booster
+                                                        console.log(
+                                                            'Not an active booster',
+                                                        );
                                                         request(
                                                             {
                                                                 url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${userBody.Id}`,
