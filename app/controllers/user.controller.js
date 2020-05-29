@@ -95,7 +95,7 @@ exports.getUserBySessionId = (req, res) => {
                 console.log('dataValues', user.dataValues);
                 console.log(
                     'discordUserId',
-                    JSON.parse(user.dataValues).DiscordUserId
+                    JSON.parse(user.dataValues)
                 );
                 console.log(
                     'RequestURL (session)',
