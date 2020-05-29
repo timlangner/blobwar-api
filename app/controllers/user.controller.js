@@ -93,9 +93,10 @@ exports.getUserBySessionId = (req, res) => {
                 // Check if user boosted the discord server
                 console.log('Check if boosted (session)');
                 console.log('dataValues', user.dataValues);
-                console.log('discordUserId', JSON.parse(
-                        user.dataValues.DiscordUserId,
-                    ));
+                console.log(
+                    'discordUserId',
+                    JSON.parse(user.dataValues).DiscordUserId
+                );
                 console.log(
                     'RequestURL (session)',
                     `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(
