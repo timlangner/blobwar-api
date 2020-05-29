@@ -57,7 +57,6 @@ exports.authDiscord = (req, res) => {
                             });
                         } else {
                             const discordUserBody = JSON.parse(response.body);
-                            console.log('discordUserBody', discordUserBody);
                             // Override IpAddress
                             User.update(
                                 {
@@ -103,6 +102,7 @@ exports.authDiscord = (req, res) => {
                                                                 message: 'Error retrieving Guild Member',
                                                             });
                                                         } else {
+                                                            console.log('Guild Member', response);
                                                             const guildMemberBody = JSON.parse(response.body);
                                                             if (guildMemberBody.premium_since) {
                                                                 // User is an active booster
