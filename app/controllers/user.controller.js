@@ -106,7 +106,7 @@ exports.getUserBySessionId = (req, res) => {
                 );
                 request(
                     {
-                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(user.dataValues.DiscordUserId)}`,
+                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${user.dataValues.DiscordUserId}`,
                         headers: {
                             Authorization: `Bot ${BOT_TOKEN}`,
                         },
@@ -115,14 +115,11 @@ exports.getUserBySessionId = (req, res) => {
                     (err, response) => {
                         if (err) {
                             res.status(500).send({
-                                message:
-                                    'Error retrieving Guild Member',
+                                message: 'Error retrieving Guild Member',
                             });
                         } else {
                             console.log('GuildMember', response.body);
-                            const guildMemberBody = JSON.parse(
-                                response.body,
-                            );
+                            const guildMemberBody = JSON.parse(response.body);
                             if (guildMemberBody.premium_since) {
                                 // User is an active booster
                                 console.log('Active booster (session)');
@@ -145,9 +142,7 @@ exports.getUserBySessionId = (req, res) => {
                                             );
                                             const foundNitroSkin = ownedSkinsBody.find(
                                                 (skin) => {
-                                                    return (
-                                                        skin.Id === 40
-                                                    );
+                                                    return skin.Id === 40;
                                                 },
                                             );
 
@@ -159,17 +154,17 @@ exports.getUserBySessionId = (req, res) => {
                                             } else {
                                                 HasSkin.create({
                                                     UserId: JSON.parse(
-                                                        user
-                                                            .dataValues
-                                                            .Id,
+                                                        user.dataValues.Id,
                                                     ),
                                                     SkinId: 40,
                                                 })
-                                                    .then(console.log('Nitro Skin added'))
-                                                    .catch((err) => {
+                                                    .then(
                                                         console.log(
-                                                            err,
-                                                        );
+                                                            'Nitro Skin added',
+                                                        ),
+                                                    )
+                                                    .catch((err) => {
+                                                        console.log(err);
                                                     });
                                             }
                                         }
@@ -197,9 +192,7 @@ exports.getUserBySessionId = (req, res) => {
                                             );
                                             const foundNitroSkin = ownedSkinsBody.find(
                                                 (skin) => {
-                                                    return (
-                                                        skin.Id === 40
-                                                    );
+                                                    return skin.Id === 40;
                                                 },
                                             );
 
@@ -208,9 +201,7 @@ exports.getUserBySessionId = (req, res) => {
                                                 HasSkin.destroy({
                                                     where: {
                                                         UserId: JSON.parse(
-                                                            user
-                                                                .dataValues
-                                                                .Id,
+                                                            user.dataValues.Id,
                                                         ),
                                                         SkinId: 40,
                                                     },
