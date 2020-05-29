@@ -79,6 +79,7 @@ exports.create = (req, res) => {
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
+    const GUILD_ID = '632515781070028811';
     const BOT_TOKEN =
         'NjQ5MzQ1MTQwNTc3NTMzOTUy.XtC9ww.dfyf0PKrMhaUzuV28ESRtILG7Vk';
     const sessionId = req.body.SessionId;
