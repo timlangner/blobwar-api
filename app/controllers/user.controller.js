@@ -90,7 +90,7 @@ exports.getUserBySessionId = (req, res) => {
                 console.log('Check if boosted');
                 request(
                     {
-                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${discordUserBody.id}`,
+                        url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(user.dataValues.Id)}`,
                         headers: {
                             Authorization: `Bot ${BOT_TOKEN}`,
                         },
