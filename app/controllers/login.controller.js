@@ -192,9 +192,6 @@ exports.authDiscord = (req, res) => {
                                                                         .dataValues
                                                                         .Id,
                                                                 )}`,
-                                                                headers: {
-                                                                    Authorization: `Bearer ${tokenBody.access_token}`,
-                                                                },
                                                                 rejectUnauthorized: false,
                                                             },
                                                             (err, response) => {
@@ -266,9 +263,6 @@ exports.authDiscord = (req, res) => {
                                                                         .dataValues
                                                                         .Id,
                                                                 )}`,
-                                                                headers: {
-                                                                    Authorization: `Bearer ${tokenBody.access_token}`,
-                                                                },
                                                                 rejectUnauthorized: false,
                                                             },
                                                             (err, response) => {

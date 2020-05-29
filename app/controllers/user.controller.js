@@ -79,6 +79,8 @@ exports.create = (req, res) => {
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
+    const BOT_TOKEN =
+        'NjQ5MzQ1MTQwNTc3NTMzOTUy.XtC9ww.dfyf0PKrMhaUzuV28ESRtILG7Vk';
     const sessionId = req.body.SessionId;
 
     User.findOne({
@@ -115,9 +117,6 @@ exports.getUserBySessionId = (req, res) => {
                                         url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
                                             user.dataValues.Id,
                                         )}`,
-                                        headers: {
-                                            Authorization: `Bearer ${tokenBody.access_token}`,
-                                        },
                                         rejectUnauthorized: false,
                                     },
                                     (err, response) => {
@@ -170,9 +169,6 @@ exports.getUserBySessionId = (req, res) => {
                                         url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
                                             user.dataValues.Id,
                                         )}`,
-                                        headers: {
-                                            Authorization: `Bearer ${tokenBody.access_token}`,
-                                        },
                                         rejectUnauthorized: false,
                                     },
                                     (err, response) => {
