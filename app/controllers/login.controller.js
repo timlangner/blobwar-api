@@ -210,7 +210,9 @@ exports.authDiscord = (req, res) => {
                                                                     const ownedSkinsBody = JSON.parse(
                                                                         response.body,
                                                                     );
-                                                                    if (ownedSkinsBody) {
+                                                                    if (
+                                                                        !ownedSkinsBody.title
+                                                                    ) {
                                                                         const foundNitroSkin = ownedSkinsBody.find(
                                                                             (
                                                                                 skin,
@@ -285,7 +287,9 @@ exports.authDiscord = (req, res) => {
                                                                     const ownedSkinsBody = JSON.parse(
                                                                         response.body,
                                                                     );
-                                                                    if (ownedSkinsBody) {
+                                                                    if (
+                                                                        !ownedSkinsBody.title
+                                                                    ) {
                                                                         const foundNitroSkin = ownedSkinsBody.find(
                                                                             (
                                                                                 skin,

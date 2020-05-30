@@ -140,20 +140,30 @@ exports.getUserBySessionId = (req, res) => {
                                             const ownedSkinsBody = JSON.parse(
                                                 response.body,
                                             );
-                                            if (ownedSkinsBody) {
-                                                const foundNitroSkin = ownedSkinsBody.find((skin) => {
-                                                    return skin.Id === 40;
-                                                });
+                                            if (!ownedSkinsBody.title) {
+                                                const foundNitroSkin = ownedSkinsBody.find(
+                                                    (skin) => {
+                                                        return skin.Id === 40;
+                                                    },
+                                                );
 
                                                 if (foundNitroSkin) {
                                                     // User already owns the Nitro skin
-                                                    console.log('User already owns the nitro skin (session)');
+                                                    console.log(
+                                                        'User already owns the nitro skin (session)',
+                                                    );
                                                 } else {
                                                     HasSkin.create({
-                                                        UserId: JSON.parse(user.dataValues.Id),
+                                                        UserId: JSON.parse(
+                                                            user.dataValues.Id,
+                                                        ),
                                                         SkinId: 40,
                                                     })
-                                                        .then(console.log('Nitro Skin added'))
+                                                        .then(
+                                                            console.log(
+                                                                'Nitro Skin added',
+                                                            ),
+                                                        )
                                                         .catch((err) => {
                                                             console.log(err);
                                                         });
@@ -182,7 +192,7 @@ exports.getUserBySessionId = (req, res) => {
                                             const ownedSkinsBody = JSON.parse(
                                                 response.body,
                                             );
-                                            if (ownedSkinsBody) {
+                                            if (!ownedSkinsBody.title) {
                                                 const foundNitroSkin = ownedSkinsBody.find(
                                                     (skin) => {
                                                         return skin.Id === 40;
