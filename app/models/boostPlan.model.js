@@ -15,6 +15,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            Multiplier: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
             Duration: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
