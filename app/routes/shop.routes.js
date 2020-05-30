@@ -30,8 +30,8 @@ module.exports = (app) => {
     // Retrieve all active boosts from a user
     router.get('/boosts/:id', shop.getActiveBoosts);
 
-    // // Buy a Boost
-    // router.post('/boosts/:id', shop.buyBoost);
+    // Buy a Boost
+    router.post('/boosts/:id', shop.buyBoost);
 
     app.use('/api/v1/shop', router);
 };
