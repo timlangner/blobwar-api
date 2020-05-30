@@ -402,7 +402,7 @@ exports.getBoostPlans = (req, res) => {
         });
 };
 
-// Retrieve all boost plans
+// Retrieve all active boosts of user
 exports.getActiveBoosts = (req, res) => {
    BoostPlan.findAll({
        include: [
@@ -434,4 +434,92 @@ exports.getActiveBoosts = (req, res) => {
                    req.body.UserId,
            });
        });
+};
+
+// Buy a boost
+exports.buyBoost = (req, res) => {
+    // Validate request
+    if (!req.body) {
+        res.status(400).send({
+            message: 'Content can not be empty!',
+        });
+        return;
+    }
+
+    let boostType = '';
+
+    // Get the skin the user wants to buy
+    BoostPlan.findOne({
+        where: { Id: req.body.BoostPlanId },
+    })
+        .then((boostPlan) => {
+            boostType = boostPlan.dataValues.Type;
+            if (boostPlan) {
+                // Check if user has enough coins to buy the boost
+                User.findOne({
+                    attributes: ['Coins'],
+                    where: {
+                        Id: req.params.id,
+                        SessionId: req.body.SessionId,
+                        IpAddress: req.clientIp,
+                    },
+                })
+                    .then((coins) => {
+                        if (
+                            JSON.parse(coins.dataValues.Coins) <
+                            JSON.parse(boostPlan.dataValues.Price)
+                        ) {
+                            res.status(409).send({
+                                message: `You do not have enough coins to purchase this ${boostType} boost.`,
+                            });
+                        } else {
+                            // Adds boost to user
+                            BoostHistory.create({
+                                UserId: parseInt(req.params.id),
+                                BoostPlanId: req.body.BoostPlanId,
+                            }).then((addedBoost) => {
+                                // Update users coins
+                                User.update(
+                                    {
+                                        Coins: db.Sequelize.literal(
+                                            `Coins - ${JSON.parse(
+                                                boostPlan.dataValues.Price,
+                                            )}`,
+                                        ),
+                                    },
+                                    {
+                                        where: {
+                                            Id: req.params.id,
+                                        },
+                                    },
+                                )
+                                    .then(() => {
+                                        res.status(200).send({
+                                            message: `You have successfully purchased the ${boostType} boost.`,
+                                        });
+                                    })
+                                    .catch((err) => {
+                                        res.status(500).send({
+                                            message:
+                                                err.message ||
+                                                'Some error occurd while trying to update users coins.',
+                                        });
+                                    });
+                            });
+                        }
+                    })
+                    .catch((err) => {
+                        res.status(500).send({
+                            message:
+                                'Error retrieving User with id=' +
+                                req.params.id,
+                        });
+                    });
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: 'Error retrieving boost plan with id=' + req.body.BoostPlanId,
+            });
+        });
 };
