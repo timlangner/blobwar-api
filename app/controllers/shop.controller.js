@@ -2,6 +2,8 @@ const db = require('../models');
 const Skin = db.skin;
 const HasSkin = db.hasSkin;
 const User = db.user;
+const BoostPlan = db.boostPlan;
+const BoostHistory = db.boostHistory;
 const Op = db.Sequelize.Op;
 
 // Define references
@@ -373,6 +375,26 @@ exports.buyPremium = (req, res) => {
         .catch((err) => {
             res.status(500).send({
                 message: 'Error retrieving skin with id=' + req.body.SkinId,
+            });
+        });
+};
+
+// Retrieve all boost plans
+exports.getBoostPlans = (req, res) => {
+    BoostPlan.findAll({
+        order: [
+            [db.Sequelize.col('Price'), 'ASC'],
+            [db.Sequelize.col('Multiplier'), 'ASC'],
+        ],
+    })
+        .then((boostPlans) => {
+            res.send(boostPlans);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurred while retrieving all boost plans.',
             });
         });
 };
