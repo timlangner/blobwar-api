@@ -23,5 +23,7 @@ db.user = require('./user.model.js')(sequelize, Sequelize);
 db.skin = require('./skin.model.js')(sequelize, Sequelize);
 db.hasSkin = require('./hasSkin.model.js')(sequelize, Sequelize);
 db.badWord = require('./badWord.model.js')(sequelize, Sequelize);
+db.boostPlan = require('./boostPlan.model.js')(sequelize, Sequelize);
+db.boostHistory = require('./boostHistory.model.js')(sequelize, Sequelize);
 
 module.exports = db;
