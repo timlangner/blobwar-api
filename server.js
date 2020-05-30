@@ -3,7 +3,8 @@ const requestIp = require('request-ip');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./app/models');
-const https = require("https");
+const https = require('https');
+const http = require("http");
 const fs = require("fs");
 let privateKey = fs.readFileSync('ssl/privkey.pem', 'utf8');
 let certificate = fs.readFileSync('ssl/fullchain.pem', 'utf8');
@@ -14,7 +15,7 @@ db.sequelize.sync();
 
 var corsOptions = {
     origin: 'https://blobwar.io',
-    // origin: 'https://localhost:8081',
+    // origin: 'http://localhost:8081',
 };
 
 app.use(cors(corsOptions));
@@ -36,6 +37,7 @@ require('./app/routes/shop.routes')(app);
 require('./app/routes/others.routes')(app);
 
 let httpsServer = https.createServer(credentials, app);
+// let httpsServer = http.createServer(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
