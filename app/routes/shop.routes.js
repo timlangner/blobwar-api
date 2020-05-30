@@ -27,8 +27,8 @@ module.exports = (app) => {
     // Retrieve all boost plans
     router.get('/boosts', shop.getBoostPlans);
 
-    // // Retrieve all active boosts from a user
-    // router.get('/boosts/:id', shop.getActiveBoosts);
+    // Retrieve all active boosts from a user
+    router.get('/boosts/:id', shop.getActiveBoosts);
 
     // // Buy a Boost
     // router.post('/boosts/:id', shop.buyBoost);

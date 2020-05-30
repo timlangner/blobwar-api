@@ -8,6 +8,9 @@ const Op = db.Sequelize.Op;
 
 // Define references
 Skin.hasOne(HasSkin);
+BoostPlan.hasOne(BoostHistory);
+BoostHistory.belongsTo(User);
+BoostHistory.belongsTo(BoostPlan);
 HasSkin.belongsTo(User);
 HasSkin.belongsTo(Skin);
 
@@ -397,4 +400,38 @@ exports.getBoostPlans = (req, res) => {
                     'Some error occurred while retrieving all boost plans.',
             });
         });
+};
+
+// Retrieve all boost plans
+exports.getActiveBoosts = (req, res) => {
+   BoostPlan.findAll({
+       include: [
+           {
+               model: BoostHistory,
+               attributes: [],
+               where: { UserId: req.params.id },
+               required: true,
+           },
+       ],
+       order: [
+           [db.Sequelize.col('Price'), 'ASC'],
+           [db.Sequelize.col('Multiplier'), 'ASC'],
+       ],
+   })
+       .then((ownedBoosts) => {
+           if (ownedBoosts.length === 0) {
+               res.status(200).send({
+                   message: `No active Boosts.`,
+               });
+           } else {
+               res.send(ownedBoosts);
+           }
+       })
+       .catch((err) => {
+           res.status(500).send({
+               message:
+                   'Error retrieving all Boosts from User with id=' +
+                   req.body.UserId,
+           });
+       });
 };
