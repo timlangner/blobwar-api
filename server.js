@@ -13,7 +13,7 @@ let credentials = { key: privateKey, cert: certificate };
 const app = express();
 db.sequelize.sync();
 
-let whitelist = ['https://blobwar.io', 'https://admin.blobwar.io']
+let whitelist = ['https://blobwar.io', 'https://admin.blobwar.io', 'undefined']
 
 var corsOptions = {
     origin: function (origin, callback) {
