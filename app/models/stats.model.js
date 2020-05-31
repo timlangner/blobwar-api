@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-    const BadWord = sequelize.define(
-        'BadWord',
+    const Stats = sequelize.define(
+        'Stats',
         {
             Id: {
                 type: Sequelize.INTEGER,
@@ -11,6 +11,7 @@ module.exports = (sequelize, Sequelize) => {
             UserId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                references: { model: 'User', key: 'Id' },
             },
             Kills: {
                 type: Sequelize.INTEGER,
@@ -21,7 +22,7 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
-            }
+            },
         },
         {
             defaultScope: {
@@ -32,5 +33,5 @@ module.exports = (sequelize, Sequelize) => {
         },
     );
 
-    return BadWord;
+    return Stats;
 };
