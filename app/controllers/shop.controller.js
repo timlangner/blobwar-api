@@ -404,36 +404,36 @@ exports.getBoostPlans = (req, res) => {
 
 // Retrieve all active boosts of user
 exports.getActiveBoosts = (req, res) => {
-   BoostPlan.findAll({
-       include: [
-           {
-               model: BoostHistory,
-               attributes: [],
-               where: { UserId: req.params.id },
-               required: true,
-           },
-       ],
-       order: [
-           [db.Sequelize.col('Price'), 'ASC'],
-           [db.Sequelize.col('Multiplier'), 'ASC'],
-       ],
-   })
-       .then((ownedBoosts) => {
-           if (ownedBoosts.length === 0) {
-               res.status(200).send({
-                   message: `No active Boosts.`,
-               });
-           } else {
-               res.send(ownedBoosts);
-           }
-       })
-       .catch((err) => {
-           res.status(500).send({
-               message:
-                   'Error retrieving all Boosts from User with id=' +
-                   req.body.UserId,
-           });
-       });
+    BoostPlan.findAll({
+        include: [
+            {
+                model: BoostHistory,
+                attributes: ['CreationTime', 'Id'],
+                where: { UserId: req.params.id },
+                required: true,
+            },
+        ],
+        order: [
+            [db.Sequelize.col('Price'), 'ASC'],
+            [db.Sequelize.col('Multiplier'), 'ASC'],
+        ],
+    })
+        .then((ownedBoosts) => {
+            if (ownedBoosts.length === 0) {
+                res.status(200).send({
+                    message: `No active Boosts.`,
+                });
+            } else {
+                res.send(ownedBoosts);
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    'Error retrieving all Boosts from User with id=' +
+                    req.body.UserId,
+            });
+        });
 };
 
 // Buy a boost
