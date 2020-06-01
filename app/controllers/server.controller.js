@@ -22,7 +22,7 @@ exports.createJSON = (req, res) => {
                 saveData[gamemode][number] = req.body;
             }
 
-            fs.writeFileSync('serverStats.json', JSON.stringify(saveData));
+            fs.writeFileSync('serverStats.json', JSON.stringify(saveData), 'utf-8');
             res.status(200).send({
                 message: 'File written',
             });

@@ -474,7 +474,7 @@ exports.buyBoost = (req, res) => {
                             });
                         } else {
                             // Adds boost to user
-                            BoostHistory.create({
+                            BoostPlan.create({
                                 UserId: parseInt(req.params.id),
                                 BoostPlanId: req.body.BoostPlanId,
                             }).then((addedBoost) => {
