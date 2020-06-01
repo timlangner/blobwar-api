@@ -36,8 +36,8 @@ require('./app/routes/server.routes')(app);
 require('./app/routes/shop.routes')(app);
 require('./app/routes/others.routes')(app);
 
+// let httpsServer = http.createServer(credentials, app);
 let httpsServer = http.createServer(app);
-// let httpsServer = http.createServer(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
