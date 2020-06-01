@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-    const BoostHistory = sequelize.define(
-        'BoostHistory',
+    const CurrentBoost = sequelize.define(
+        'CurrentBoost',
         {
             Id: {
                 type: Sequelize.INTEGER,
@@ -30,5 +30,5 @@ module.exports = (sequelize, Sequelize) => {
         },
     );
 
-    return BoostHistory;
+    return CurrentBoost;
 };
