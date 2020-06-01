@@ -3,14 +3,14 @@ const Skin = db.skin;
 const HasSkin = db.hasSkin;
 const User = db.user;
 const BoostPlan = db.boostPlan;
-const BoostHistory = db.boostHistory;
+const CurrentBoost = db.currentBoost;
 const Op = db.Sequelize.Op;
 
 // Define references
 Skin.hasOne(HasSkin);
-BoostPlan.hasOne(BoostHistory);
-BoostHistory.belongsTo(User);
-BoostHistory.belongsTo(BoostPlan);
+BoostPlan.hasOne(CurrentBoost);
+CurrentBoost.belongsTo(User);
+CurrentBoost.belongsTo(BoostPlan);
 HasSkin.belongsTo(User);
 HasSkin.belongsTo(Skin);
 
@@ -407,8 +407,8 @@ exports.getActiveBoosts = (req, res) => {
     BoostPlan.findAll({
         include: [
             {
-                model: BoostHistory,
-                attributes: ['CreationTime', 'Id'],
+                model: CurrentBoost,
+                attributes: ['Id', 'CreationTime'],
                 where: { UserId: req.params.id },
                 required: true,
             },
@@ -520,6 +520,42 @@ exports.buyBoost = (req, res) => {
         .catch((err) => {
             res.status(500).send({
                 message: 'Error retrieving boost plan with id=' + req.body.BoostPlanId,
+            });
+        });
+};
+
+// Delete an active boost from user
+exports.deleteActiveBoost = (req, res) => {
+    User.findOne({
+        where: {
+            Id: req.params.id,
+            SessionId: req.body.SessionId,
+            IpAddress: req.clientIp,
+        },
+    })
+        .then((user) => {
+            if (user) {
+                CurrentBoost.destroy({
+                    where: {
+                        Id: req.body.CurrentBoostId,
+                        UserId: req.params.id,
+                    },
+                })
+                    .then(() => {
+                        res.status(200).send({
+                            message: `Successfully deleted boost with the id ${req.body.CurrentBoostId} from the user with the id ${req.params.id}`,
+                        });
+                    })
+                    .catch(() => {
+                        res.status(500).send({
+                            message: `Error while deleting active boost from user with the id ${req.params.id}`
+                        })
+                    })
+            }
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: `Error while trying to get user with the id ${req.params.id}`,
             });
         });
 };
