@@ -30,6 +30,9 @@ module.exports = (app) => {
     // Retrieve all active boosts from a user
     router.get('/boosts/:id', shop.getActiveBoosts);
 
+    // Delete a boost after 
+    router.delete('/boosts/:id', shop.deleteActiveBoost);
+
     // Buy a Boost
     router.post('/boosts/:id', shop.buyBoost);
 
