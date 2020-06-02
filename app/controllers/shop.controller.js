@@ -448,7 +448,7 @@ exports.buyBoost = (req, res) => {
 
     let boostType = '';
 
-    // Get the skin the user wants to buy
+    // Get the boost the user wants to buy
     BoostPlan.findOne({
         where: { Id: req.body.BoostPlanId },
     })
@@ -474,7 +474,7 @@ exports.buyBoost = (req, res) => {
                             });
                         } else {
                             // Adds boost to user
-                            BoostPlan.create({
+                            CurrentBoost.create({
                                 UserId: parseInt(req.params.id),
                                 BoostPlanId: req.body.BoostPlanId,
                             }).then((addedBoost) => {
