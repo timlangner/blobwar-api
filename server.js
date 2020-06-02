@@ -13,9 +13,15 @@ let credentials = { key: privateKey, cert: certificate };
 const app = express();
 db.sequelize.sync();
 
+var whitelist = ['https://blobwar.io', 'https://admin.blobwar.io']
 var corsOptions = {
-    origin: '*',
-    // origin: 'http://localhost:8081',
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
 };
 
 app.use(cors(corsOptions));
