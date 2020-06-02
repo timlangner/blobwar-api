@@ -57,14 +57,10 @@ exports.getServers = (req, res) => {
 
             res.send(servers)
         }).catch(() => {
-            res.status(500).send({
-                message: 'No servers',
-            });
+            res.send(servers);
         })
     } else {
-        res.status(500).send({
-            message: 'No servers',
-        });
+        res.send(servers);
     }
 }
 
