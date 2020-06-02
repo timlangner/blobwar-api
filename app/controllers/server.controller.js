@@ -17,24 +17,10 @@ function checkServers() {
                 return reject();
 
             servers[keys[i]].forEach((serv, index) => {
-                let ws = new WebSocket(`wss://eu.blobwar.io:${serv.server.port}`)
-                ws.onopen = (open) => {
-                    if (open.target.readyState == 1 || open.target.readyState == 0) {
-                        ws.close()
-                    }
-                    else {
-                        servers[keys[i]].splice(index, 1)
-                        if (!servers[keys[i]].length) {
-                            delete servers[keys[i]]
-                        }
-                    }
-                }
-                ws.onerror = (error) => {
-                    if (error.error.code == 'ECONNREFUSED' && servers[keys[i]] && servers[keys[i]].length) {
-                        servers[keys[i]].splice(index, 1)
-                        if (!servers[keys[i]].length) {
-                            delete servers[keys[i]]
-                        }
+                if (serv.server.shutdown) {
+                    servers[keys[i]].splice(index, 1)
+                    if (!servers[keys[i]].length) {
+                        delete servers[keys[i]]
                     }
                 }
             })
