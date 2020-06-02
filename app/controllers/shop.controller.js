@@ -387,6 +387,7 @@ exports.getBoostPlans = (req, res) => {
     BoostPlan.findAll({
         order: [
             [db.Sequelize.col('Price'), 'ASC'],
+            [db.Sequelize.col('Type'), 'ASC'],
             [db.Sequelize.col('Multiplier'), 'ASC'],
         ],
     })
@@ -415,6 +416,7 @@ exports.getActiveBoosts = (req, res) => {
         ],
         order: [
             [db.Sequelize.col('Price'), 'ASC'],
+            [db.Sequelize.col('Type'), 'ASC'],
             [db.Sequelize.col('Multiplier'), 'ASC'],
         ],
     })
