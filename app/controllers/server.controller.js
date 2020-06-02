@@ -44,7 +44,6 @@ function checkServers() {
 }
 
 exports.getServers = (req, res) => {
-    // First we check every websocket if it's online.
     const keys = Object.keys(servers);
 
     if (keys.length) {
