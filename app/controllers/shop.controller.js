@@ -387,6 +387,7 @@ exports.getBoostPlans = (req, res) => {
     BoostPlan.findAll({
         order: [
             [db.Sequelize.col('Price'), 'ASC'],
+            [db.Sequelize.col('Type'), 'ASC'],
             [db.Sequelize.col('Multiplier'), 'ASC'],
         ],
     })
@@ -415,6 +416,7 @@ exports.getActiveBoosts = (req, res) => {
         ],
         order: [
             [db.Sequelize.col('Price'), 'ASC'],
+            [db.Sequelize.col('Type'), 'ASC'],
             [db.Sequelize.col('Multiplier'), 'ASC'],
         ],
     })
@@ -448,7 +450,7 @@ exports.buyBoost = (req, res) => {
 
     let boostType = '';
 
-    // Get the skin the user wants to buy
+    // Get the boost the user wants to buy
     BoostPlan.findOne({
         where: { Id: req.body.BoostPlanId },
     })
@@ -474,7 +476,7 @@ exports.buyBoost = (req, res) => {
                             });
                         } else {
                             // Adds boost to user
-                            BoostPlan.create({
+                            CurrentBoost.create({
                                 UserId: parseInt(req.params.id),
                                 BoostPlanId: req.body.BoostPlanId,
                             }).then((addedBoost) => {
