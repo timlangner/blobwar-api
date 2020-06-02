@@ -1,46 +1,97 @@
 const fs = require('fs');
 const path = require('path');
+const WebSocket = require("ws");
 
-// Create a JSON file
-exports.createJSON = (req, res) => {
-    fs.readFile('serverStats.json', 'utf8', function (err, data) {
-        if (data && data !== undefined && Object.keys(JSON.parse(data)).length > 0) {
-            let saveData = JSON.parse(data)
+let servers = {};
 
-            const gamemode = req.body.server.name.replace(/[0-9]/g, '').replace(/[_]/g, '');
-            const number = req.body.server.name.replace(/[A-z]/g, '').replace(/[_]/g, '')
+function checkServers() {
+    return new Promise(async (resolve, reject) => {
+        const keys = Object.keys(servers);
 
-            if (saveData[gamemode] === undefined) {
-                saveData[gamemode] = {}
+        for (let i = 0; i < keys.length; i++) {
+            if (!servers[keys[i]].length) {
+                delete servers[keys[i]]
             }
 
-            if (req.body.shutdown === true) {
-                delete saveData[gamemode][number]
+            if (servers[keys[i]] == undefined)
+                return reject();
 
-                if (Object.keys(saveData[gamemode]).length === 0) delete saveData[gamemode]
-            } else {
-                saveData[gamemode][number] = req.body;
-            }
-
-            fs.writeFileSync('serverStats.json', JSON.stringify(saveData), 'utf-8');
-            res.status(200).send({
-                message: 'File written',
-            });
-        } else {
-            const saveData = {};
-            const gamemode = req.body.server.name.replace(/[0-9]/g, '').replace(/[_]/g, '');
-            const number = req.body.server.name.replace(/[A-z]/g, '').replace(/[_]/g, '')
-            saveData[gamemode] = { [number]: req.body }
-            fs.writeFileSync('serverStats.json', JSON.stringify(saveData));
-            res.status(200).send({
-                message: 'Success',
-            });
+            servers[keys[i]].forEach((serv, index) => {
+                let ws = new WebSocket(`wss://eu.blobwar.io:${serv.server.port}`)
+                ws.onopen = (open) => {
+                    if (open.target.readyState == 1 || open.target.readyState == 0) {
+                        ws.close()
+                    }
+                    else {
+                        servers[keys[i]].splice(index, 1)
+                        if (!servers[keys[i]].length) {
+                            delete servers[keys[i]]
+                        }
+                    }
+                }
+                ws.onerror = (error) => {
+                    if (error.error.code == 'ECONNREFUSED' && servers[keys[i]] && servers[keys[i]].length) {
+                        servers[keys[i]].splice(index, 1)
+                        if (!servers[keys[i]].length) {
+                            delete servers[keys[i]]
+                        }
+                    }
+                }
+            })
         }
+        resolve()
     })
-};
+}
 
-// Read JSON file
-exports.readJSON = (req, res) => {
-    const data = fs.readFileSync('serverStats.json');
-    res.send(data);
-};
+exports.getServers = (req, res) => {
+    // First we check every websocket if it's online.
+    const keys = Object.keys(servers);
+
+    if (keys.length) {
+        checkServers().then(() => {
+
+            for (let i = 0; i < keys.length; i++) {
+                servers[keys[i]].sort((a, b) => {
+                    return a.server.port - b.server.port;
+                })
+            }
+
+            res.send(servers)
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No servers',
+            });
+        })
+    } else {
+        res.status(500).send({
+            message: 'No servers',
+        });
+    }
+}
+
+exports.saveServer = (req, res) => {
+    let server = req.body[0];
+    const gamemode = server.server.gamemode;
+    delete server.server.gamemode;
+    if (!servers[gamemode]) {
+        servers[gamemode] = [server];
+    } else {
+        const keys = Object.keys(servers);
+        for (let i = 0; i < keys.length; i++) {
+
+            let found = false;
+
+            for (let j in servers[gamemode]) {
+                if (servers[gamemode][j].server.port == server.server.port) {
+                    servers[gamemode][j] = server;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                servers[gamemode].push(server)
+            }
+        }
+    }
+}
