@@ -25,7 +25,11 @@ exports.logout = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-    User.findAll()
+    User.findAll({
+        attributes: {
+            exclude: ['Email', 'SessionId', 'IpAddress'],
+        },
+    })
         .then((data) => {
             res.send(data);
         })
@@ -43,6 +47,9 @@ exports.findOne = (req, res) => {
     const id = req.params.id;
 
     User.findOne({
+        attributes: {
+            exclude: ['Email', 'SessionId', 'IpAddress']
+        },
         where: { id: id }
     })
         .then((data) => {
