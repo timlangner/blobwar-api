@@ -7,10 +7,10 @@ exports.verify = (req, res) => {
 
 
     request.post(url, {
-        body: {
+        body: JSON.stringify({
             secret: secret,
             response: token
-        }
+        })
     }, (err, response) => {
         if (err) {
             res.status(500).send({
