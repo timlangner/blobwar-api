@@ -17,7 +17,7 @@ exports.verify = (req, res) => {
                 message: "Error occured whilst trying to validate recaptcha."
             })
         } else {
-            console.log(response)
+            console.log(response.body)
         }
     })
 }
