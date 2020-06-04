@@ -17,7 +17,21 @@ exports.verify = (req, res) => {
                 message: "Error occured whilst trying to validate recaptcha."
             })
         } else {
-            console.log(response)
+            const data = JSON.parse(response);
+
+            if (data.score && data.score >= 0.5) {
+                res.send({ message: "human" })
+            }
+
+            if (data.score && data.score < 0.5) {
+                res.send({ message: "bot" })
+            }
+
+            if (!data.score) {
+                res.status(500).send({
+                    message: "Error occured whilst trying to check recaptcha score."
+                })
+            }
         }
     })
 }
