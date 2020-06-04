@@ -7,17 +7,17 @@ exports.verify = (req, res) => {
 
 
     request.post(url, {
-        body: JSON.stringify({
+        form: {
             secret: secret,
             response: token
-        })
-    }, (err, response) => {
+        }
+    }, (err, httpResponse, response) => {
         if (err) {
             res.status(500).send({
                 message: "Error occured whilst trying to validate recaptcha."
             })
         } else {
-            console.log(response.body)
+            console.log(response)
         }
     })
 }
