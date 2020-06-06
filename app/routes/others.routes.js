@@ -5,10 +5,10 @@ module.exports = (app) => {
 
     var router = require('express').Router();
 
-    // Get nad words
+    // Get bad words
     router.get('/badwords', BadWord.findAll);
 
-    // Get nad words
+    // log out user
     router.put('/logout', user.logout);
 
     // Recaptcha
