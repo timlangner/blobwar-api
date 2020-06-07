@@ -41,7 +41,8 @@ module.exports = (app) => {
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
 
-    router.get('/:discordId', user.findOneByDiscordId);
+    // Retrieve a single user with discordID
+    router.get('/discord/:discordId', user.findOneByDiscordId);
 
     app.use('/api/v1/users', router);
 };
