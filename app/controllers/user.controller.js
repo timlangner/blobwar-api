@@ -62,6 +62,25 @@ exports.findOne = (req, res) => {
         });
 };
 
+exports.findOneByDiscordId = (req, res) => {
+    const discordId = req.params.discordId;
+
+    User.findOne({
+        attributes: {
+            exclude: ['Email', 'SessionId', 'IpAddress']
+        },
+        where: { DiscordUserId: discordId }
+    })
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: 'Error retrieving User with discord id=' + discordId,
+            });
+        });
+}
+
 // Create a user
 exports.create = (req, res) => {
 
