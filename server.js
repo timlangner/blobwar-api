@@ -40,6 +40,7 @@ require('./app/routes/user.routes')(app);
 require('./app/routes/login.routes')(app);
 require('./app/routes/server.routes')(app);
 require('./app/routes/shop.routes')(app);
+require('./app/routes/gameserver.routes')(app);
 require('./app/routes/others.routes')(app);
 
 let httpsServer = https.createServer(credentials, app);

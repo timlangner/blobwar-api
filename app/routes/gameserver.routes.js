@@ -20,26 +20,11 @@ module.exports = (app) => {
         algorithms: ['RS256'],
     });
 
-    // Create a new User
-    router.post('/', user.create);
-
-    // Get user by sessionId and Ip for auto login
-    router.post('/session', user.getUserBySessionIdAndIp);
-
-    // Get user by sessionId for gameserver
-    router.post('/get', user.getUserBySessionId);
-
-    // Retrieve the top 100 users with the most xp
-    router.get('/leaderboard', user.getLeaderBoard);
-
     // Check for Authorization for below routes
     // router.use(checkJwt);
 
-    // Retrieve all Users
-    router.get('/', user.findAll);
+    // Get user by sessionId for gameserver
+    router.post('/users/session', user.getUserBySessionId);
 
-    // Retrieve a single User with id
-    router.get('/:id', user.findOne);
-
-    app.use('/api/v1/users', router);
+    app.use('/api/v1/gameserver', router);
 };

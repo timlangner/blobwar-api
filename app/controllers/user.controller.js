@@ -86,7 +86,7 @@ exports.create = (req, res) => {
 };
 
 // Checks if an available sessionId exists & return user
-exports.getUserBySessionId = (req, res) => {
+exports.getUserBySessionIdAndIp = (req, res) => {
     const GUILD_ID = '632515781070028811';
     const BOT_TOKEN =
         'NjQ5MzQ1MTQwNTc3NTMzOTUy.XtC9ww.dfyf0PKrMhaUzuV28ESRtILG7Vk';
@@ -98,19 +98,6 @@ exports.getUserBySessionId = (req, res) => {
         .then((user) => {
             if (user) {
                 // Check if user boosted the discord server
-                console.log('Check if boosted (session)');
-                console.log('dataValues', user.dataValues);
-                console.log(
-                    'discordUserId',
-                    user.dataValues.DiscordUserId
-                );
-                console.log('type', typeof(user.dataValues.DiscordUserId));
-                console.log(
-                    'RequestURL (session)',
-                    `https://discordapp.com/api/guilds/${GUILD_ID}/members/${JSON.parse(
-                        user.dataValues.DiscordUserId,
-                    )}`,
-                );
                 request(
                     {
                         url: `https://discordapp.com/api/guilds/${GUILD_ID}/members/${user.dataValues.DiscordUserId}`,
@@ -125,7 +112,6 @@ exports.getUserBySessionId = (req, res) => {
                                 message: 'Error retrieving Guild Member',
                             });
                         } else {
-                            console.log('GuildMember', response.body);
                             const guildMemberBody = JSON.parse(response.body);
                             if (guildMemberBody.premium_since) {
                                 // User is an active booster
@@ -156,9 +142,6 @@ exports.getUserBySessionId = (req, res) => {
 
                                                 if (foundNitroSkin) {
                                                     // User already owns the Nitro skin
-                                                    console.log(
-                                                        'User already owns the nitro skin (session)',
-                                                    );
                                                 } else {
                                                     HasSkin.create({
                                                         UserId: JSON.parse(
@@ -181,7 +164,6 @@ exports.getUserBySessionId = (req, res) => {
                                 );
                             } else {
                                 // User is not an active booster
-                                console.log('Not an active booster (session)');
                                 request(
                                     {
                                         url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
@@ -226,6 +208,25 @@ exports.getUserBySessionId = (req, res) => {
                         }
                     },
                 );
+                res.send(user);
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: 'Error retrieving User by SessionId',
+            });
+        });
+};
+
+// Checks if an available sessionId exists & return user
+exports.getUserBySessionId = (req, res) => {
+    const sessionId = req.body.SessionId;
+
+    User.findOne({
+        where: { SessionId: sessionId },
+    })
+        .then((user) => {
+            if (user) {
                 res.send(user);
             }
         })
