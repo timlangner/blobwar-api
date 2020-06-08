@@ -258,19 +258,42 @@ exports.getUserBySessionId = (req, res) => {
 
 // Retrieve the top 100 users with the most xp
 exports.getLeaderBoard = (req, res) => {
-    User.findAll({
-        attributes: ['Id', 'Username', 'Xp'],
-        limit: 100,
-        order: [[Sequelize.col('Xp'), 'DESC']],
-    })
-        .then((data) => {
-            res.send(data);
+    const page = req.params.page;
+
+    // If page is not given or less than 1, send top 100 
+    if (!page || page < 1) {
+        User.findAll({
+            attributes: ['Id', 'Username', 'Xp'],
+            limit: 100,
+            order: [[Sequelize.col('Xp'), 'DESC']],
         })
-        .catch((err) => {
-            res.status(500).send({
-                message:
-                    err.message ||
-                    'Some error occurred while retrieving the user leaderboard.',
+            .then((data) => {
+                res.send(data);
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message:
+                        err.message ||
+                        'Some error occurred while retrieving the user leaderboard.',
+                });
             });
-        });
+    } else {
+        let page2 = page * 10 - 10;
+        User.findAll({
+            attributes: ['Id', 'Username', 'Xp'],
+            limit: 10,
+            offset: page2,
+            order: [[Sequelize.col('Xp'), 'DESC']],
+        })
+            .then((data) => {
+                res.send(data);
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message:
+                        err.message ||
+                        'Some error occurred while retrieving the user leaderboard.',
+                });
+            });
+    }
 };
