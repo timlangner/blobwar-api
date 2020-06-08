@@ -24,7 +24,7 @@ module.exports = (app) => {
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
 
-    router.get('/:discordId', user.findOneByDiscordId);
+    router.get('/discord/:discordId', user.findOneByDiscordId);
 
     router.put('/:discordId', user.updateCoins);
 
