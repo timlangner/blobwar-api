@@ -84,29 +84,98 @@ exports.findOneByDiscordId = (req, res) => {
 exports.updateCoins = (req, res) => {
     const discordId = req.params.discordId;
     const coins = req.body.coins;
+    const authorUid = req.body.authorDiscordUid;
 
-    User.update(
-        {
-            Coins: db.Sequelize.literal(
-                `Coins + ${coins}`,
-            ),
+    User.findOne({
+        attributes: ['role'],
+        where: {
+            DiscordUserId: authorUid,
         },
-        {
-            where: {
-                DiscordUserId: discordId,
-            },
-        },
-    )
-        .then(() => {
-            res.status(200).send({
-                message: `You have successfully added ${coins} to the the user with the DiscordUserId ${discordId}.`,
-            });
+    })
+        .then((user) => {
+            if (user.dataValues.role === 'Admin') {
+                User.update(
+                    {
+                        Coins: db.Sequelize.literal(`Coins + ${coins}`),
+                    },
+                    {
+                        where: {
+                            DiscordUserId: discordId,
+                        },
+                    },
+                ).then(() => {
+                   User.findOne({
+                       attributes: ['coins'],
+                       where: {
+                           DiscordUserId: discordId,
+                       },
+                   }).then((totalCoins) => {
+                       res.json({
+                           coinsAdded: coins,
+                           totalCoins: totalCoins.dataValues.coins,
+                       });
+                   });
+                });
+            } else {
+                res.status(403).send({
+                    message: `You don't have permission to add coins to a user`,
+                });
+            }
         })
         .catch((err) => {
             res.status(500).send({
                 message:
                     err.message ||
                     'Some error occurd while trying to update users coins.',
+            });
+        });
+};
+
+exports.setCoins = (req, res) => {
+    const discordId = req.params.discordId;
+    const coins = req.body.coins;
+    const authorUid = req.body.authorDiscordUid;
+
+    User.findOne({
+        attributes: ['role'],
+        where: {
+            DiscordUserId: authorUid,
+        },
+    })
+        .then((user) => {
+            if (user.dataValues.role === 'Admin') {
+                User.update(
+                    {
+                        Coins: coins,
+                    },
+                    {
+                        where: {
+                            DiscordUserId: discordId,
+                        },
+                    },
+                ).then(() => {
+                    User.findOne({
+                        attributes: ['coins'],
+                        where: {
+                            DiscordUserId: discordId,
+                        },
+                    }).then((totalCoins) => {
+                        res.json({
+                            coins: totalCoins.dataValues.coins,
+                        });
+                    });
+                });
+            } else {
+                res.status(403).send({
+                    message: `You don't have permission to set coins of a user`,
+                });
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurd while trying to set users coins.',
             });
         });
 };
@@ -133,6 +202,8 @@ exports.create = (req, res) => {
             });
         });
 };
+
+
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionIdAndIp = (req, res) => {

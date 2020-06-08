@@ -26,7 +26,9 @@ module.exports = (app) => {
 
     router.get('/discord/:discordId', user.findOneByDiscordId);
 
-    router.put('/:discordId', user.updateCoins);
+    router.put('/coins/add/:discordId', user.updateCoins);
+
+    router.put('/coins/set/:discordId', user.setCoins);
 
     app.use('/api/v1/users', router);
 };
