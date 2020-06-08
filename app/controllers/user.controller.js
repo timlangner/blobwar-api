@@ -107,7 +107,7 @@ exports.updateCoins = (req, res) => {
                 .then((totalCoins) => {
                     res.json({
                         coinsAdded: coins,
-                        coins: totalCoins.dataValues.coins
+                        totalCoins: totalCoins.dataValues.coins
                     });
                 })
         })
