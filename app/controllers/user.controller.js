@@ -93,7 +93,6 @@ exports.updateCoins = (req, res) => {
         },
     })
         .then((user) => {
-            console.log(user.dataValues);
             if (user.dataValues.role === 'Admin') {
                 User.update(
                     {
@@ -144,7 +143,6 @@ exports.setCoins = (req, res) => {
         },
     })
         .then((user) => {
-            console.log(user.dataValues);
             if (user.dataValues.role === 'Admin') {
                 User.update(
                     {
