@@ -261,7 +261,7 @@ exports.getLeaderBoard = (req, res) => {
     const page = req.params.page;
 
     // If page is not given or less than 1, send top 100 
-    if (!page || page < 1) {
+    if (!page) {
         User.findAll({
             attributes: ['Id', 'Username', 'Xp'],
             limit: 100,
@@ -278,7 +278,7 @@ exports.getLeaderBoard = (req, res) => {
                 });
             });
     } else {
-        let page2 = page * 10 - 10;
+        let page2 = (page < 1 ? 0 : page) * 10 - 10;
         User.findAll({
             attributes: ['Id', 'Username', 'Xp'],
             limit: 10,
