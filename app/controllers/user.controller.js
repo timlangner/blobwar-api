@@ -278,7 +278,7 @@ exports.getLeaderBoard = (req, res) => {
                 });
             });
     } else {
-        let page2 = (page < 1 ? 0 : page) * 10 - 10;
+        let page2 = (page < 1 ? 1 : page) * 10 - 10;
         User.findAll({
             attributes: ['Id', 'Username', 'Xp'],
             limit: 10,
