@@ -15,6 +15,7 @@ module.exports = (app) => {
     router.post('/get', user.getUserBySessionId);
 
     // Retrieve the top 100 users with the most xp
+    router.get('/leaderboard/:page', user.getLeaderBoard);
     router.get('/leaderboard', user.getLeaderBoard);
 
     // Retrieve all Users
