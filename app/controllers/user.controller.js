@@ -81,6 +81,36 @@ exports.findOneByDiscordId = (req, res) => {
         });
 }
 
+exports.updateCoins = (req, res) => {
+    const discordId = req.params.discordId;
+    const coins = req.body.coins;
+
+    User.update(
+        {
+            Coins: db.Sequelize.literal(
+                `Coins + ${coins}`,
+            ),
+        },
+        {
+            where: {
+                DiscordUserId: discordId,
+            },
+        },
+    )
+        .then(() => {
+            res.status(200).send({
+                message: `You have successfully added ${coins} to the the user with the DiscordUserId ${discordId}.`,
+            });
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    'Some error occurd while trying to update users coins.',
+            });
+        });
+};
+
 // Create a user
 exports.create = (req, res) => {
 

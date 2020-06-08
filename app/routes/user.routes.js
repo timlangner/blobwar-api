@@ -5,21 +5,6 @@ module.exports = (app) => {
 
     var router = require('express').Router();
 
-    // Authorization Middleware init
-    const checkJwt = jwt({
-        secret: jwksRsa.expressJwtSecret({
-            cache: true,
-            rateLimit: true,
-            jwksRequestsPerMinute: 5,
-            jwksUri: `https://dev-vlkok0uj.eu.auth0.com/.well-known/jwks.json`,
-        }),
-
-        // Validate the audience and the issuer.
-        audience: 'https:/blobwar.io/api/v1/',
-        issuer: `https://dev-vlkok0uj.eu.auth0.com/`,
-        algorithms: ['RS256'],
-    });
-
     // Create a new User
     router.post('/', user.create);
 
@@ -30,11 +15,7 @@ module.exports = (app) => {
     router.post('/get', user.getUserBySessionId);
 
     // Retrieve the top 100 users with the most xp
-    router.get('/leaderboard/:page', user.getLeaderBoard);
     router.get('/leaderboard', user.getLeaderBoard);
-
-    // Check for Authorization for below routes
-    // router.use(checkJwt);
 
     // Retrieve all Users
     router.get('/', user.findAll);
@@ -42,8 +23,9 @@ module.exports = (app) => {
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
 
-    // Retrieve a single user with discordID
-    router.get('/discord/:discordId', user.findOneByDiscordId);
+    router.get('/:discordId', user.findOneByDiscordId);
+
+    router.put('/:discordId', user.updateCoins);
 
     app.use('/api/v1/users', router);
 };
