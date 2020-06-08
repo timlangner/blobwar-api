@@ -263,7 +263,7 @@ exports.getLeaderBoard = (req, res) => {
     // If page is not given or less than 1, send top 100 
     if (!page) {
         User.findAll({
-            attributes: ['Id', 'Username', 'Xp'],
+            attributes: ['Id', 'Username', 'Xp', 'DiscordUserId'],
             limit: 100,
             order: [[Sequelize.col('Xp'), 'DESC']],
         })
@@ -280,7 +280,7 @@ exports.getLeaderBoard = (req, res) => {
     } else {
         let page2 = (page < 1 ? 1 : page) * 10 - 10;
         User.findAll({
-            attributes: ['Id', 'Username', 'Xp'],
+            attributes: ['Id', 'Username', 'Xp', 'DiscordUserId'],
             limit: 10,
             offset: page2,
             order: [[Sequelize.col('Xp'), 'DESC']],
