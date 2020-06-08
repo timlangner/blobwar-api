@@ -98,9 +98,18 @@ exports.updateCoins = (req, res) => {
         },
     )
         .then(() => {
-            res.status(200).send({
-                message: `You have successfully added ${coins} to the the user with the DiscordUserId ${discordId}.`,
-            });
+            User.findOne({
+                attributes: ['coins'],
+                where: {
+                    DiscordUserId: discordId
+                },
+            })
+                .then((totalCoins) => {
+                    res.json({
+                        coinsAdded: coins,
+                        coins: totalCoins.dataValues.coins
+                    });
+                })
         })
         .catch((err) => {
             res.status(500).send({
