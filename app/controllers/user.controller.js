@@ -84,32 +84,44 @@ exports.findOneByDiscordId = (req, res) => {
 exports.updateCoins = (req, res) => {
     const discordId = req.params.discordId;
     const coins = req.body.coins;
+    const authorUid = req.body.authorDiscordUid;
 
-    User.update(
-        {
-            Coins: db.Sequelize.literal(
-                `Coins + ${coins}`,
-            ),
+    User.findOne({
+        attributes: ['role'],
+        where: {
+            DiscordUserId: authorUid,
         },
-        {
-            where: {
-                DiscordUserId: discordId,
-            },
-        },
-    )
-        .then(() => {
-            User.findOne({
-                attributes: ['coins'],
-                where: {
-                    DiscordUserId: discordId
-                },
-            })
-                .then((totalCoins) => {
-                    res.json({
-                        coinsAdded: coins,
-                        totalCoins: totalCoins.dataValues.coins
-                    });
-                })
+    })
+        .then((user) => {
+            console.log(user.dataValues);
+            if (user.dataValues.role === 'Admin') {
+                User.update(
+                    {
+                        Coins: db.Sequelize.literal(`Coins + ${coins}`),
+                    },
+                    {
+                        where: {
+                            DiscordUserId: discordId,
+                        },
+                    },
+                ).then(() => {
+                   User.findOne({
+                       attributes: ['coins'],
+                       where: {
+                           DiscordUserId: discordId,
+                       },
+                   }).then((totalCoins) => {
+                       res.json({
+                           coinsAdded: coins,
+                           totalCoins: totalCoins.dataValues.coins,
+                       });
+                   });
+                });
+            } else {
+                res.status(403).send({
+                    message: `You don't have permission to add coins to a user`,
+                });
+            }
         })
         .catch((err) => {
             res.status(500).send({
