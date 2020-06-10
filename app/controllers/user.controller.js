@@ -104,17 +104,17 @@ exports.updateCoins = (req, res) => {
                         },
                     },
                 ).then(() => {
-                   User.findOne({
-                       attributes: ['coins'],
-                       where: {
-                           DiscordUserId: discordId,
-                       },
-                   }).then((totalCoins) => {
-                       res.json({
-                           coinsAdded: coins,
-                           totalCoins: totalCoins.dataValues.coins,
-                       });
-                   });
+                    User.findOne({
+                        attributes: ['coins'],
+                        where: {
+                            DiscordUserId: discordId,
+                        },
+                    }).then((totalCoins) => {
+                        res.json({
+                            coinsAdded: coins,
+                            totalCoins: totalCoins.dataValues.coins,
+                        });
+                    });
                 });
             } else {
                 res.status(403).send({

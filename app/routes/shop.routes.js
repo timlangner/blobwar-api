@@ -21,9 +21,6 @@ module.exports = (app) => {
     // Retrieve all skins from a user
     router.get('/skins/owned/:id', shop.findOwned);
 
-    // Retrieve all skins from a user
-    router.get('/skins/owned/:id', shop.findOwned);
-
     // Retrieve all boost plans
     router.get('/boosts', shop.getBoostPlans);
 
