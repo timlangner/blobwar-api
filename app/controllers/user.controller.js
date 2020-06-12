@@ -213,7 +213,7 @@ exports.getUserBySessionIdAndIp = (req, res) => {
     const sessionId = req.body.SessionId;
 
     User.findOne({
-        where: { SessionId: sessionId, IpAddress: req.clientIp },
+        where: { SessionId: sessionId },
     })
         .then((user) => {
             if (user) {
@@ -329,6 +329,8 @@ exports.getUserBySessionIdAndIp = (req, res) => {
                     },
                 );
                 res.send(user);
+            } else {
+                res.status(204).send();
             }
         })
         .catch((err) => {
