@@ -14,5 +14,8 @@ module.exports = (app) => {
     // Recaptcha
     router.post('/recaptcha', recaptcha.verify)
 
+    // Check if user is already logged in
+    router.get('/ping/:id', user.checkUser)
+
     app.use('/api/v1', router);
 };
