@@ -3,6 +3,7 @@ const request = require('request');
 const User = db.user;
 const HasSkin = db.hasSkin;
 const Sequelize = db.Sequelize;
+// const API_URL = "http://localhost:8081/api";
 const API_URL = "https://api.blobwar.io";
 
 let lastPings = [];
