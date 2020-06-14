@@ -4,6 +4,8 @@ const User = db.user;
 const HasSkin = db.hasSkin;
 const Sequelize = db.Sequelize;
 
+let lastPings = [];
+
 // Logout
 exports.logout = (req, res) => {
     const sessionId = req.body.SessionId;
@@ -203,7 +205,32 @@ exports.create = (req, res) => {
         });
 };
 
+// Check if user is already logged in
+exports.checkUser = (req, res) => {
+    const userId = req.params.id;
+    const currentTimestamp = Date.now();
+    const twoMinutes = 2 * 60 * 1000;
 
+    // Check if there's already a ping of the user from the last two minutes
+    const isLoggedIn = lastPings.find((lastPing) => {
+        return (
+            lastPing.userId === userId &&
+            lastPing.timestamp > currentTimestamp - twoMinutes
+        );
+    });
+
+    // Adds a "ping" to the array
+    lastPings.push({ userId: userId, timestamp: currentTimestamp });
+
+    if (isLoggedIn) {
+        res.status(200).send({
+            message: `The user with the id ${userId} is currently logged in.`
+        });
+    } else {
+        res.status(204).send();
+    }
+
+};
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionIdAndIp = (req, res) => {
@@ -213,7 +240,7 @@ exports.getUserBySessionIdAndIp = (req, res) => {
     const sessionId = req.body.SessionId;
 
     User.findOne({
-        where: { SessionId: sessionId, IpAddress: req.clientIp },
+        where: { SessionId: sessionId },
     })
         .then((user) => {
             if (user) {
@@ -329,6 +356,8 @@ exports.getUserBySessionIdAndIp = (req, res) => {
                     },
                 );
                 res.send(user);
+            } else {
+                res.status(204).send();
             }
         })
         .catch((err) => {
