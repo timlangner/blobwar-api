@@ -2,6 +2,8 @@ const request = require('request');
 const db = require('../models');
 const User = db.user;
 const HasSkin = db.hasSkin;
+const API_URL = "https://api.blobwar.io"
+const MAIN_URL = "https://blobwar.io"
 
 // SessionId Generator
 function generateSessionId(length) {
@@ -20,7 +22,7 @@ exports.authDiscord = (req, res) => {
     const CODE = req.body.code;
     const CLIENT_ID = '649345140577533952';
     const CLIENT_SECRET = 't_u5HfiZd66Ckz32eDXLyL9s7xoeFMxS';
-    const REDIRECT_URI = `https://blobwar.io/auth/discord`;
+    const REDIRECT_URI = `${MAIN_URL}/auth/discord`;
     const GUILD_ID = '632515781070028811';
     const BOT_TOKEN =
         'NjQ5MzQ1MTQwNTc3NTMzOTUy.XtC9ww.dfyf0PKrMhaUzuV28ESRtILG7Vk';
@@ -191,7 +193,7 @@ exports.authDiscord = (req, res) => {
                                                         );
                                                         request(
                                                             {
-                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
+                                                                url: `${API_URL}/v1/shop/skins/owned/${JSON.parse(
                                                                     user
                                                                         .dataValues
                                                                         .Id,
@@ -268,7 +270,7 @@ exports.authDiscord = (req, res) => {
                                                         );
                                                         request(
                                                             {
-                                                                url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
+                                                                url: `${API_URL}/v1/shop/skins/owned/${JSON.parse(
                                                                     user
                                                                         .dataValues
                                                                         .Id,

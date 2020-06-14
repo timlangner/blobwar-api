@@ -13,7 +13,7 @@ let credentials = { key: privateKey, cert: certificate };
 const app = express();
 db.sequelize.sync();
 
-var whitelist = ['https://blobwar.io', 'https://admin.blobwar.io', 'http://localhost']
+var whitelist = ['https://blobwar.io', 'https://admin.blobwar.io', 'http://localhost', 'http://localhost:8080']
 var corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -43,8 +43,8 @@ require('./app/routes/shop.routes')(app);
 require('./app/routes/gameserver.routes')(app);
 require('./app/routes/others.routes')(app);
 
-// let httpsServer = https.createServer(credentials, app);
-let httpsServer = http.createServer(app);
+let httpsServer = https.createServer(credentials, app);
+// let httpsServer = http.createServer(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;

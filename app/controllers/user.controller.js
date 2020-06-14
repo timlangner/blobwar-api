@@ -3,6 +3,7 @@ const request = require('request');
 const User = db.user;
 const HasSkin = db.hasSkin;
 const Sequelize = db.Sequelize;
+const API_URL = "https://api.blobwar.io";
 
 let lastPings = [];
 
@@ -265,7 +266,7 @@ exports.getUserBySessionIdAndIp = (req, res) => {
                                 console.log('Active booster (session)');
                                 request(
                                     {
-                                        url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
+                                        url: `${API_URL}/v1/shop/skins/owned/${JSON.parse(
                                             user.dataValues.Id,
                                         )}`,
                                         rejectUnauthorized: false,
@@ -313,7 +314,7 @@ exports.getUserBySessionIdAndIp = (req, res) => {
                                 // User is not an active booster
                                 request(
                                     {
-                                        url: `https://eu.blobwar.io:8081/api/v1/shop/skins/owned/${JSON.parse(
+                                        url: `${API_URL}/v1/shop/skins/owned/${JSON.parse(
                                             user.dataValues.Id,
                                         )}`,
                                         rejectUnauthorized: false,
