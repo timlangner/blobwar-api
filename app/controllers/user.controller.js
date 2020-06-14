@@ -208,30 +208,31 @@ exports.create = (req, res) => {
 
 // Check if user is already logged in
 exports.checkUser = (req, res) => {
-    const userId = req.params.id;
+    const sessionId = req.params.id;
     const currentTimestamp = Date.now();
     const oneMinute = 60 * 1000;
 
     // Check if there's already a ping of the user from the last two minutes
     const isLoggedIn = lastPings.find((lastPing) => {
-        return (lastPing.userId === userId &&
-            lastPing.timestamp > currentTimestamp - oneMinute);
+        return (
+            lastPing.sessionId === sessionId &&
+            lastPing.timestamp > currentTimestamp - oneMinute
+        );
     });   
 
     // Adds a "ping" to the array
-    lastPings.push({ userId: userId, timestamp: currentTimestamp });
+    lastPings.push({ sessionId: sessionId, timestamp: currentTimestamp });
 
     // Remove last object from user
     const index = lastPings.findIndex(
         (ping) =>
-            ping.userId === userId &&
-            ping.timestamp < currentTimestamp,
+            ping.sessionId === sessionId && ping.timestamp < currentTimestamp,
     );
     if (index >= 0) lastPings.splice(index, 1);
 
     if (isLoggedIn) {
         res.status(200).send({
-            message: `The user with the id ${userId} is currently logged in.`
+            message: `The user with the sessionId ${sessionId} is currently logged in.`,
         });
     } else {
         res.status(204).send();
