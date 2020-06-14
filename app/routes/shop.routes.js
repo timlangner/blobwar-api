@@ -14,6 +14,7 @@ module.exports = (app) => {
 
     // POST request to add a skin
     router.post('/skins/:id', shop.addSkin)
+    router.post('/skins/free/:id', shop.addSkin)
 
     // Retrieve all level skins of a user
     router.get('/skins/level/:id', shop.findLevel);

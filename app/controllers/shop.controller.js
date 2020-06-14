@@ -199,15 +199,7 @@ exports.findOwned = (req, res) => {
         ],
     })
         .then((ownedSkins) => {
-            if (ownedSkins.length === 0) {
-                res.json({
-                    title: 'No Skins!',
-                    message:
-                        `Go play & farm some coins, so this won't be empty anymore soon ;)`,
-                });
-            } else {
-                res.send(ownedSkins);
-            }
+            res.send(ownedSkins);
         })
         .catch((err) => {
             res.status(500).send({
