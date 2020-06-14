@@ -51,11 +51,11 @@ exports.getServers = (req, res) => {
 }
 
 exports.saveServer = (req, res) => {
-    let server = req.body[0];
-    const gamemode = server.server.gamemode;
-    delete server.server.gamemode;
+    let body = req.body;
+    const gamemode = body.server.gamemode;
+    delete body.server.gamemode;
     if (!servers[gamemode]) {
-        servers[gamemode] = [server];
+        servers[gamemode] = [body];
     } else {
         const keys = Object.keys(servers);
         for (let i = 0; i < keys.length; i++) {
@@ -63,16 +63,18 @@ exports.saveServer = (req, res) => {
             let found = false;
 
             for (let j in servers[gamemode]) {
-                if (servers[gamemode][j].server.port == server.server.port) {
-                    servers[gamemode][j] = server;
+                if (servers[gamemode][j].server.port == body.server.port) {
+                    servers[gamemode][j] = body;
                     found = true;
                     break;
                 }
             }
 
             if (!found) {
-                servers[gamemode].push(server)
+                servers[gamemode].push(body)
             }
         }
     }
+
+    console.log(servers)
 }
