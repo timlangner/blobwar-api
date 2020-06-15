@@ -232,17 +232,11 @@ exports.checkUser = (req, res) => {
 
     // Check if there's already a ping of the user from the last two minutes
     const isLoggedIn = lastPings.find((lastPing) => {
-<<<<<<< HEAD
-        return (lastPing.userId === userId &&
-            lastPing.timestamp > currentTimestamp - oneMinute);
-    });
-=======
         return (
             lastPing.sessionId === sessionId &&
             lastPing.timestamp > currentTimestamp - oneMinute
         );
-    });   
->>>>>>> f8cb48603c918ada58ee44ebf7b378f9b5554509
+    });
 
     // Adds a "ping" to the array
     lastPings.push({ sessionId: sessionId, timestamp: currentTimestamp });
