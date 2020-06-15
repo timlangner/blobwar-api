@@ -24,10 +24,13 @@ module.exports = (app) => {
     // Retrieve a single User with id
     router.get('/:id', user.findOne);
 
+    // Retrieve a single user by discordId
     router.get('/discord/:discordId', user.findOneByDiscordId);
 
+    // Add coins to a user with discordId
     router.put('/coins/add/:discordId', user.updateCoins);
 
+    // Update coins of a user with discordId
     router.put('/coins/set/:discordId', user.setCoins);
 
     app.use('/api/v1/users', router);
