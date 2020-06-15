@@ -6,7 +6,7 @@ const Sequelize = db.Sequelize;
 // const API_URL = "http://localhost:8081/api";
 const API_URL = "https://api.blobwar.io";
 
-let lastPings = [];
+let loggedIn = [];
 
 // Logout
 exports.logout = (req, res) => {
@@ -208,16 +208,12 @@ exports.create = (req, res) => {
 };
 
 // Remove user from login history after refresh
-exports.refreshLoginHistory = (req, res) => {
-    const sessionId = req.params.id;
-    const currentTimestamp = Date.now();
+exports.refreshLogin = (req, res) => {
+    const sessionId = req.params.sessionId;
 
-    // Remove object from user
-    const index = lastPings.findIndex(
-        (ping) =>
-            ping.sessionId === sessionId,
-    );
-    if (index >= 0) lastPings.splice(index, 1);
+    // Remove user from array
+    const index = loggedIn.findIndex((session) => session === sessionId);
+    if (index >= 0) loggedIn.splice(index, 1);
 
     res.status(200).send({
         message: `The user with the sessionId ${sessionId} got removed from the login history.`,
@@ -225,28 +221,15 @@ exports.refreshLoginHistory = (req, res) => {
 };
 
 // Check if user is already logged in
-exports.checkUser = (req, res) => {
-    const sessionId = req.params.id;
-    const currentTimestamp = Date.now();
-    const oneMinute = 60 * 1000;
+exports.checkLogin = (req, res) => {
+    const sessionId = req.params.sessionId;
 
     // Check if there's already a ping of the user from the last two minutes
-    const isLoggedIn = lastPings.find((lastPing) => {
-        return (
-            lastPing.sessionId === sessionId &&
-            lastPing.timestamp > currentTimestamp - oneMinute
-        );
+    const isLoggedIn = loggedIn.find((session) => {
+        return session === sessionId;
     });
 
-    // Adds a "ping" to the array
-    lastPings.push({ sessionId: sessionId, timestamp: currentTimestamp });
-
-    // Remove last object from user
-    const index = lastPings.findIndex(
-        (ping) =>
-            ping.sessionId === sessionId && ping.timestamp < currentTimestamp,
-    );
-    if (index >= 0) lastPings.splice(index, 1);
+    if (!isLoggedIn) loggedIn.push(sessionId);
 
     if (isLoggedIn) {
         res.status(200).send({
