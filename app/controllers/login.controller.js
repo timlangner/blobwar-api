@@ -4,7 +4,7 @@ const User = db.user;
 const HasSkin = db.hasSkin;
 // const API_URL = "http://localhost:8081/api"
 const API_URL = "https://api.blobwar.io"
-// const MAIN_URL = "http://localhost:8081"
+// const MAIN_URL = "http://localhost"
 const MAIN_URL = "https://blobwar.io"
 
 // SessionId Generator

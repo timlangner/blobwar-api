@@ -217,7 +217,7 @@ exports.checkUser = (req, res) => {
     const isLoggedIn = lastPings.find((lastPing) => {
         return (lastPing.userId === userId &&
             lastPing.timestamp > currentTimestamp - oneMinute);
-    });   
+    });
 
     // Adds a "ping" to the array
     lastPings.push({ userId: userId, timestamp: currentTimestamp });
