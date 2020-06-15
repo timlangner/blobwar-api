@@ -207,6 +207,23 @@ exports.create = (req, res) => {
         });
 };
 
+// Remove user from login history after refresh
+exports.refreshLoginHistory = (req, res) => {
+    const sessionId = req.params.id;
+    const currentTimestamp = Date.now();
+
+    // Remove object from user
+    const index = lastPings.findIndex(
+        (ping) =>
+            ping.sessionId === sessionId,
+    );
+    if (index >= 0) lastPings.splice(index, 1);
+
+    res.status(200).send({
+        message: `The user with the sessionId ${sessionId} got removed from the login history.`,
+    });
+};
+
 // Check if user is already logged in
 exports.checkUser = (req, res) => {
     const sessionId = req.params.id;
@@ -238,7 +255,6 @@ exports.checkUser = (req, res) => {
     } else {
         res.status(204).send();
     }
-
 };
 
 // Checks if an available sessionId exists & return user
