@@ -14,11 +14,5 @@ module.exports = (app) => {
     // Recaptcha
     router.post('/recaptcha', recaptcha.verify)
 
-    // Check if user is already logged in
-    router.get('/ping/:id', user.checkUser)
-
-    // Remove user from login history on refresh
-    router.delete('/ping/:id', user.refreshLoginHistory);
-
     app.use('/api/v1', router);
 };
