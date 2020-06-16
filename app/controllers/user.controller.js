@@ -454,3 +454,67 @@ exports.getLeaderBoard = (req, res) => {
             });
     }
 };
+
+exports.addCoins = async (req, res) =>{
+    const userId = req.params.userId;
+    const coins = req.body.coins;
+
+    try {
+        await User.update(
+            {
+                Coins: db.Sequelize.literal(`Coins + ${coins}`),
+            },
+            {
+                where: {
+                    Id: userId,
+                },
+            },
+        );
+
+        const userCoins = await User.findOne({
+            attributes: ['coins'],
+            where: {
+                Id: userId,
+            },
+        });
+
+        await res.json({
+            addedCoins: coins,
+            totalCoins: userCoins.dataValues.coins,
+        });
+    } catch (err) {        
+        res.status(500).send();
+    }
+};
+
+exports.addXp = async (req, res) => {
+    const userId = req.params.userId;
+    const xp = req.body.xp;
+
+    try {
+        await User.update(
+            {
+                Xp: db.Sequelize.literal(`Xp + ${xp}`),
+            },
+            {
+                where: {
+                    Id: userId,
+                },
+            },
+        );
+
+        const userXp = await User.findOne({
+            attributes: ['xp'],
+            where: {
+                Id: userId,
+            },
+        });
+
+        await res.json({
+            addedXp: xp,
+            totalXp: userXp.dataValues.xp,
+        });
+    } catch (err) {
+        res.status(500).send();
+    }
+};

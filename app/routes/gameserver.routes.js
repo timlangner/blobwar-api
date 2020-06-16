@@ -12,5 +12,11 @@ module.exports = (app) => {
     // Remove user from login history on refresh or logout
     router.delete('/users/checkLogin/:sessionId', user.refreshLogin);
 
+    // Add coins to user
+    router.put('/users/coins/:userId', user.addCoins);
+
+    // Add xp to user
+    router.put('/users/xp/:userId', user.addXp);
+
     app.use('/api/v1/gameserver', router);
 };
