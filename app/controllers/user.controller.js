@@ -3,8 +3,8 @@ const request = require('request');
 const User = db.user;
 const HasSkin = db.hasSkin;
 const Sequelize = db.Sequelize;
-// const API_URL = "http://localhost:8081/api";
-const API_URL = "https://api.blobwar.io";
+const API_URL = "http://localhost:8081/api";
+// const API_URL = "https://api.blobwar.io";
 
 let loggedIn = [];
 
@@ -209,34 +209,47 @@ exports.create = (req, res) => {
 
 // Remove user from login history after refresh
 exports.refreshLogin = (req, res) => {
-    const sessionId = req.params.sessionId;
+    if (req.clientIp.replace('::ffff:', '') != req.app.locals.ip) {
+        res.status(401).send({
+            message: 'Unauthorized'
+        })
+    } else {
+        const sessionId = req.params.sessionId;
 
-    // Remove user from array
-    const index = loggedIn.findIndex((session) => session === sessionId);
-    if (index >= 0) loggedIn.splice(index, 1);
+        // Remove user from array
+        const index = loggedIn.findIndex((session) => session === sessionId);
+        if (index >= 0) loggedIn.splice(index, 1);
 
-    res.status(200).send({
-        message: `The user with the sessionId ${sessionId} got removed from the login history.`,
-    });
+        res.status(200).send({
+            message: `The user with the sessionId ${sessionId} got removed from the login history.`,
+        });
+    }
 };
 
 // Check if user is already logged in
 exports.checkLogin = (req, res) => {
-    const sessionId = req.params.sessionId;
-
-    // Check if there's already a ping of the user from the last two minutes
-    const isLoggedIn = loggedIn.find((session) => {
-        return session === sessionId;
-    });
-
-    if (!isLoggedIn) loggedIn.push(sessionId);
-
-    if (isLoggedIn) {
-        res.status(200).send({
-            message: `The user with the sessionId ${sessionId} is currently logged in.`,
-        });
+    if (req.clientIp.replace('::ffff:', '') != req.app.locals.ip) {
+        res.status(401).send({
+            message: 'Unauthorized'
+        })
     } else {
-        res.status(204).send();
+
+        const sessionId = req.params.sessionId;
+
+        // Check if there's already a ping of the user from the last two minutes
+        const isLoggedIn = loggedIn.find((session) => {
+            return session === sessionId;
+        });
+
+        if (!isLoggedIn) loggedIn.push(sessionId);
+
+        if (isLoggedIn) {
+            res.status(200).send({
+                message: `The user with the sessionId ${sessionId} is currently logged in.`,
+            });
+        } else {
+            res.status(204).send();
+        }
     }
 };
 
@@ -377,21 +390,27 @@ exports.getUserBySessionIdAndIp = (req, res) => {
 
 // Checks if an available sessionId exists & return user
 exports.getUserBySessionId = (req, res) => {
-    const sessionId = req.body.SessionId;
-
-    User.findOne({
-        where: { SessionId: sessionId },
-    })
-        .then((user) => {
-            if (user) {
-                res.send(user);
-            }
+    if (req.clientIp.replace('::ffff:', '') != req.app.locals.ip) {
+        res.status(401).send({
+            message: 'Unauthorized'
         })
-        .catch((err) => {
-            res.status(500).send({
-                message: 'Error retrieving User by SessionId',
+    } else {
+        const sessionId = req.body.SessionId;
+
+        User.findOne({
+            where: { SessionId: sessionId },
+        })
+            .then((user) => {
+                if (user) {
+                    res.send(user);
+                }
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message: 'Error retrieving User by SessionId',
+                });
             });
-        });
+    }
 };
 
 // Retrieve the top 100 users with the most xp

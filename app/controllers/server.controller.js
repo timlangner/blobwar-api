@@ -75,6 +75,4 @@ exports.saveServer = (req, res) => {
             }
         }
     }
-
-    console.log(servers)
 }

@@ -43,8 +43,11 @@ require('./app/routes/shop.routes')(app);
 require('./app/routes/gameserver.routes')(app);
 require('./app/routes/others.routes')(app);
 
-let httpsServer = https.createServer(credentials, app);
-// let httpsServer = http.createServer(app);
+// let httpsServer = https.createServer(credentials, app);
+let httpsServer = http.createServer(app);
+
+if (httpsServer.address() == null) app.locals.ip = '127.0.0.1';
+else app.locals.ip = httpsServer.address().address;
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;

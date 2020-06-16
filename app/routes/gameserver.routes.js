@@ -5,7 +5,7 @@ module.exports = (app) => {
 
     // Get user by sessionId for gameserver
     router.post('/users/session', user.getUserBySessionId);
-    
+
     // Check if user is already logged in
     router.get('/users/checkLogin/:sessionId', user.checkLogin)
 

@@ -2,10 +2,10 @@ const request = require('request');
 const db = require('../models');
 const User = db.user;
 const HasSkin = db.hasSkin;
-// const API_URL = "http://localhost:8081/api"
-const API_URL = "https://api.blobwar.io"
-// const MAIN_URL = "http://localhost"
-const MAIN_URL = "https://blobwar.io"
+const API_URL = "http://localhost:8081/api"
+// const API_URL = "https://api.blobwar.io"
+const MAIN_URL = "http://localhost"
+// const MAIN_URL = "https://blobwar.io"
 
 // SessionId Generator
 function generateSessionId(length) {
