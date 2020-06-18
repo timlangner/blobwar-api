@@ -7,10 +7,13 @@ module.exports = (app) => {
     router.post('/users/session', user.getUserBySessionId);
 
     // Check if user is already logged in
-    router.get('/users/checkLogin/:sessionId', user.checkLogin)
+    router.post('/users/checkLogin/:sessionId', user.checkLogin)
 
     // Remove user from login history on refresh or logout
     router.delete('/users/checkLogin/:sessionId', user.refreshLogin);
+
+    // Remove all users with a specific server port (server restart)
+    router.delete('/users/checkLogin/server/:serverPort', user.serverRestart);
 
     // Add coins to user
     router.put('/users/coins/:userId', user.addCoins);
