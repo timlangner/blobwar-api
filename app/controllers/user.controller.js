@@ -217,7 +217,7 @@ exports.refreshLogin = (req, res) => {
         const sessionId = req.params.sessionId;
 
         // Remove user from array
-        const index = loggedIn.findIndex((user) => user.session === sessionId);
+        const index = loggedIn.findIndex((user) => user.sessionId === sessionId);
         if (index >= 0) loggedIn.splice(index, 1);
 
         res.status(200).send({
@@ -228,18 +228,27 @@ exports.refreshLogin = (req, res) => {
 
 // Remove all users when a server restarts
 exports.serverRestart = (req, res) => {
-    const port = req.params.serverPort;
+    if (req.clientIp.replace('::ffff:', '') != req.app.locals.ip) {
+        res.status(401).send({
+            message: 'Unauthorized'
+        })
+    } else {
 
-    // Remove users from array
-    for (let i = 0; i < loggedIn.length; i++) {
-        const index = loggedIn.findIndex((user) => user.serverPort === port);
-        if (index >= 0) loggedIn.splice(index, 1);
+        const port = req.params.serverPort;
+        const length = loggedIn.length
+
+        // Remove users from array
+        for (let i = 0; i < length; i++) {
+            const index = loggedIn.findIndex(
+                (user) => user.serverPort === parseInt(port),
+            );
+            if (index >= 0) loggedIn.splice(index, 1);
+        }
+        
+        res.status(200).send({
+            message: `The users on the server with port "${port}" got removed from the login history.`,
+        });
     }
-
-    res.status(200).send({
-        message: `The users on the server with port "${port}" got removed from the login history.`,
-    });
-
 } 
 
 // Check if user is already logged in
@@ -249,13 +258,12 @@ exports.checkLogin = (req, res) => {
             message: 'Unauthorized'
         })
     } else {
-
         const sessionId = req.params.sessionId;
         const port = req.body.port;
 
-        // Check if there's already a ping of the user from the last two minutes
+        // Check if there's already a user with the same port logged in
         const isLoggedIn = loggedIn.find((user) => {
-            return user.session === sessionId && user.serverPort === port;
+            return user.sessionId === sessionId && user.serverPort === port;
         });
 
         if (!isLoggedIn) loggedIn.push({ sessionId: sessionId, serverPort: port });
@@ -264,7 +272,7 @@ exports.checkLogin = (req, res) => {
 
         if (isLoggedIn) {
             res.status(200).send({
-                message: `The user with the sessionId ${sessionId} is currently logged in.`,
+                message: `The user with the sessionId ${sessionId} is currently logged in on port ${port}.`,
             });
         } else {
             res.status(204).send();

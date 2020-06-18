@@ -12,8 +12,8 @@ module.exports = (app) => {
     // Remove user from login history on refresh or logout
     router.delete('/users/checkLogin/:sessionId', user.refreshLogin);
 
-    // Remove all users with a specific port (server restart)
-    router.delete('users/checkLogin/:serverPort', user.serverRestart);
+    // Remove all users with a specific server port (server restart)
+    router.delete('/users/checkLogin/server/:serverPort', user.serverRestart);
 
     // Add coins to user
     router.put('/users/coins/:userId', user.addCoins);
