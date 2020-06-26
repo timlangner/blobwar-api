@@ -3,11 +3,14 @@ module.exports = (app) => {
 
     var router = require('express').Router();
 
-    // Read the JSON Data
+    // Get all servers
     router.get('/', server.getServers);
 
-    // Create a JSON file with the server stats
-    router.post('/', server.saveServer);
+    // Save/update server
+    router.post('/:port', server.saveServer);
 
-    app.use('/api/v1/servers', router);
+    // Delete server
+    router.delete('/:port', server.deleteServer)
+
+    app.use('/api/v2/servers', router);
 };

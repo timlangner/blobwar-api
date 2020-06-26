@@ -20,11 +20,15 @@ exports.verify = (req, res) => {
             const data = JSON.parse(response);
 
             if (data.score && data.score >= 0.5) {
-                res.send({ message: "human" })
+                res.send({
+                    message: "human"
+                })
             }
 
             if (data.score && data.score < 0.5) {
-                res.send({ message: "bot" })
+                res.send({
+                    message: "bot"
+                })
             }
 
             if (!data.score) {
