@@ -137,7 +137,7 @@ Returns all level skins.
 
 **(GET) /shop/skins/owned/{UserId}**
 
-Returns all skins a user owns.
+Returns all owned skins.
 
 **Example-Response:** 
 ```javascript
